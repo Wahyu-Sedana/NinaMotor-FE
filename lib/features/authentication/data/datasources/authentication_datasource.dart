@@ -7,9 +7,9 @@ abstract class AuthenticationDatasource {
   Future<AuthenticationModelLogin> userLogin(String email, String password);
 }
 
-class AuthenticationLoginDataSource implements AuthenticationDatasource {
+class AuthenticationDataSourceImpl implements AuthenticationDatasource {
   final Dio dio;
-  AuthenticationLoginDataSource({required this.dio});
+  AuthenticationDataSourceImpl({required this.dio});
 
   @override
   Future<AuthenticationModelLogin> userLogin(

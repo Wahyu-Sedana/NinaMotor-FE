@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/cores/presentations/screens/onboarding_screen.dart';
 import 'package:frontend/features/authentication/presentations/screens/login_screen.dart';
 import 'package:frontend/features/authentication/presentations/screens/register_screen.dart';
+import 'package:frontend/features/home/presentations/screens/home_screen.dart';
 import 'package:frontend/features/splash_screen.dart';
 
 class RouteService {
@@ -9,6 +10,7 @@ class RouteService {
   static const String onboardingRoute = '/onboarding';
   static const String loginRoute = '/login';
   static const String registerRoute = '/register';
+  static const String homeRoute = '/home';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splashRoute:
@@ -19,6 +21,8 @@ class RouteService {
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case registerRoute:
         return MaterialPageRoute(builder: (_) => const RegisterScreen());
+      case homeRoute:
+        return MaterialPageRoute(builder: (_) => const HomeScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

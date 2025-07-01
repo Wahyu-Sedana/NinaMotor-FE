@@ -10,7 +10,7 @@ class AppInterceptor extends Interceptor {
     options.headers.addAll({"content-type": "application/json; charset=utf-8"});
     options.headers.addAll({"Accept": "application/json"});
 
-    final Session session = locator<Session>();
+    final Session session = await locator.getAsync<Session>();
     final String accessToken = session.getToken;
 
     if (accessToken.isNotEmpty) {
