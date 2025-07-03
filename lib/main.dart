@@ -5,6 +5,8 @@ import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/presentations/bloc/authentication_bloc.dart';
+import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
+import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
 import 'package:frontend/features/routes/route.dart';
 
 Future<void> main() async {
@@ -29,6 +31,16 @@ class MainApp extends StatelessWidget {
           BlocProvider(
             create: (context) => AuthenticationBloc(
               authenticationUsecaseImpl: locator(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => SparepartBloc(
+              sparepartUsecaseImpl: locator(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => KategoriBloc(
+              kategoriUsecaseImpl: locator(),
             ),
           ),
         ],

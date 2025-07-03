@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
 void logger(dynamic value, {String? label}) {
   if (kDebugMode) {
@@ -9,3 +10,9 @@ void logger(dynamic value, {String? label}) {
     }
   }
 }
+
+final formatCurrency = NumberFormat.currency(
+  locale: 'id_ID',
+  symbol: 'Rp ',
+  decimalDigits: 0,
+);

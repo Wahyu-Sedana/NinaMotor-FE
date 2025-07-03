@@ -12,6 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final _pages = [
     const HomeTab(),
+    const Center(child: Text("Cart")),
     const Center(child: Text("Bookmark")),
     const Center(child: Text("Profile")),
   ];
@@ -27,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart), label: 'Cart'),
           BottomNavigationBarItem(
               icon: Icon(Icons.bookmark), label: 'Bookmark'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
