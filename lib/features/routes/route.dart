@@ -3,6 +3,7 @@ import 'package:frontend/cores/presentations/screens/onboarding_screen.dart';
 import 'package:frontend/features/authentication/presentations/screens/login_screen.dart';
 import 'package:frontend/features/authentication/presentations/screens/register_screen.dart';
 import 'package:frontend/features/home/presentations/screens/home_screen.dart';
+import 'package:frontend/features/home/presentations/screens/produk_list_screen.dart';
 import 'package:frontend/features/splash_screen.dart';
 
 class RouteService {
@@ -11,6 +12,7 @@ class RouteService {
   static const String loginRoute = '/login';
   static const String registerRoute = '/register';
   static const String homeRoute = '/home';
+  static const String listProdukRoute = '/list-produk';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splashRoute:
@@ -23,6 +25,9 @@ class RouteService {
         return MaterialPageRoute(builder: (_) => const RegisterScreen());
       case homeRoute:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
+      case listProdukRoute:
+        return MaterialPageRoute(builder: (_) => const ProdukListScreen());
+
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

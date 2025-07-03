@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/home/presentations/screens/home_tab.dart';
+import 'package:frontend/features/profile/presentations/screens/profile_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const HomeTab(),
     const Center(child: Text("Cart")),
     const Center(child: Text("Bookmark")),
-    const Center(child: Text("Profile")),
+    const ProfileTab(),
   ];
 
   @override

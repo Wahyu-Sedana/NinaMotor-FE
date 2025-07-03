@@ -10,7 +10,9 @@ import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/state/kategori_state.dart';
 import 'package:frontend/features/home/presentations/bloc/state/produk_state.dart';
+import 'package:frontend/features/home/presentations/screens/produk_detail_screen.dart';
 import 'package:frontend/features/home/presentations/widgets/shimmer_widget.dart';
+import 'package:frontend/features/routes/route.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -39,9 +41,27 @@ class HomeTab extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            Text(
-              "Selamat Datang \nDi Bengkel Nina Motor!",
-              style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Expanded(
+                  child: Text(
+                    "Selamat Datang \nDi Bengkel Nina Motor!",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.notifications_none, color: Colors.red),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -57,7 +77,7 @@ class HomeTab extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 6,
                         offset: const Offset(0, 3),
                       )
@@ -101,8 +121,7 @@ class HomeTab extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                           Container(
-                            color: Colors.black
-                                .withOpacity(0.4), // lapisan hitam transparan
+                            color: Colors.black.withValues(alpha: 0.4),
                           ),
                           Center(
                             child: Padding(
@@ -134,7 +153,7 @@ class HomeTab extends StatelessWidget {
                 const SizedBox(height: 24),
                 const Text(
                   "Kategori Produk",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -185,9 +204,27 @@ class HomeTab extends StatelessWidget {
               },
             ),
             const SizedBox(height: 24),
-            const Text(
-              "Produk Terbaru",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Produk Terbaru",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteService.listProdukRoute);
+                  },
+                  child: const Text(
+                    "Lihat selengkapnya",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             BlocBuilder<SparepartBloc, SparepartState>(
@@ -226,7 +263,7 @@ class HomeTab extends StatelessWidget {
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha: 0.08),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -316,9 +353,14 @@ class HomeTab extends StatelessWidget {
                                     const SizedBox(height: 8),
                                     GestureDetector(
                                       onTap: () {
-                                        // TODO: Arahkan ke halaman detail
-                                        debugPrint(
-                                            "Selengkapnya untuk: ${item.nama}");
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                SparepartDetailScreen(
+                                                    sparepart: item),
+                                          ),
+                                        );
                                       },
                                       child: const Text(
                                         "Selengkapnya →",
