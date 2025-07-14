@@ -29,6 +29,25 @@ class AuthenticationLoginError extends AuthenticationState {
   List<Object> get props => [failure];
 }
 
+class AuthenticationLogoutLoading extends AuthenticationState {}
+
+class AuthenticationLogoutInitial extends AuthenticationState {}
+
+class AuthenticationLogoutSuccess extends AuthenticationState {
+  AuthenticationLogoutSuccess();
+  @override
+  List<Object> get props => [AuthenticationLogoutSuccess];
+}
+
+class AuthenticationLogoutError extends AuthenticationState {
+  final Failure failure;
+  AuthenticationLogoutError({
+    required this.failure,
+  });
+  @override
+  List<Object> get props => [failure];
+}
+
 // class AuthenticationRegisterLoading extends AuthenticationState {}
 
 // class AuthenticationRegisterInitial extends AuthenticationState {}

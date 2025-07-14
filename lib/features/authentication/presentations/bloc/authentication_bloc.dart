@@ -10,6 +10,7 @@ class AuthenticationBloc
   AuthenticationBloc({required this.authenticationUsecaseImpl})
       : super(AuthenticationLoginInitial()) {
     on<LoginEvent>(_onLogin);
+    on<LogoutEvent>(_onLogout);
   }
 
   Future<void> _onLogin(
@@ -23,6 +24,18 @@ class AuthenticationBloc
       (error) => emit(AuthenticationLoginError(failure: error)),
       (data) =>
           emit(AuthenticationLoginSuccess(authenticationModelLogin: data)),
+    );
+  }
+
+  Future<void> _onLogout(
+      LogoutEvent event, Emitter<AuthenticationState> emit) async {
+    emit(AuthenticationLogoutLoading());
+
+    final result = await authenticationUsecaseImpl.callLogout();
+
+    result.fold(
+      (error) => emit(AuthenticationLogoutError(failure: error)),
+      (data) => emit(AuthenticationLogoutSuccess()),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:frontend/features/authentication/data/models/authentication_mode
 abstract class AuthenticationRepository {
   Future<Either<Failure, AuthenticationModelLogin>> userLogin(
       String email, String password);
+  Future<Either<Failure, AuthenticationModelLogout>> userLogout();
 }
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -20,6 +21,17 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       final authenticationModelLogin =
           await authenticationDatasource.userLogin(email, password);
       return Right(authenticationModelLogin);
+    } on Exception catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthenticationModelLogout>> userLogout() async {
+    try {
+      final authenticationModelLogout =
+          await authenticationDatasource.userLogout();
+      return Right(authenticationModelLogout);
     } on Exception catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }

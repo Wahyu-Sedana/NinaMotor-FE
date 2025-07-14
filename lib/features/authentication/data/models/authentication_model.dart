@@ -17,3 +17,24 @@ class AuthenticationModelLogin {
         password: json['password'] ?? "");
   }
 }
+
+class AuthenticationModelLogout {
+  final String message;
+  final int status;
+
+  AuthenticationModelLogout({required this.message, required this.status});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+    };
+  }
+
+  factory AuthenticationModelLogout.fromJson(Map<String, dynamic> json) {
+    return AuthenticationModelLogout(
+      message: json['message'] ?? "",
+      status: json['status'] ?? 0,
+    );
+  }
+}
