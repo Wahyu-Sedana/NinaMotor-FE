@@ -251,7 +251,7 @@ class HomeTab extends StatelessWidget {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 0.7,
+                        childAspectRatio: 0.6,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
                       ),
