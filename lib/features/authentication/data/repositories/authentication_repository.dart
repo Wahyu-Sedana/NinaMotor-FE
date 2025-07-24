@@ -4,9 +4,11 @@ import 'package:frontend/features/authentication/data/datasources/authentication
 import 'package:frontend/features/authentication/data/models/authentication_model.dart';
 
 abstract class AuthenticationRepository {
-  Future<Either<Failure, AuthenticationModelLogin>> userLogin(
+  Future<Either<Failure, AuthenticationModel>> userLogin(
       String email, String password);
   Future<Either<Failure, AuthenticationModelLogout>> userLogout();
+  Future<Either<Failure, AuthenticationModel>> userRegister(
+      String name, String email, String password, String cPassword);
 }
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -15,14 +17,19 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   AuthenticationRepositoryImpl({required this.authenticationDatasource});
 
   @override
-  Future<Either<Failure, AuthenticationModelLogin>> userLogin(
+  Future<Either<Failure, AuthenticationModel>> userLogin(
       String email, String password) async {
     try {
       final authenticationModelLogin =
           await authenticationDatasource.userLogin(email, password);
-      return Right(authenticationModelLogin);
+      if (authenticationModelLogin.status == 404) {
+        return Left(ServerFailure(
+            code: 404, message: authenticationModelLogin.message));
+      } else {
+        return Right(authenticationModelLogin);
+      }
     } on Exception catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+      return Left(ServerFailure(code: 500, message: e.toString()));
     }
   }
 
@@ -33,7 +40,19 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
           await authenticationDatasource.userLogout();
       return Right(authenticationModelLogout);
     } on Exception catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+      return Left(ServerFailure(code: 500, message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthenticationModel>> userRegister(
+      String name, String email, String password, String cPassword) async {
+    try {
+      final authenticationModelRegister = await authenticationDatasource
+          .userRegister(name, email, password, cPassword);
+      return Right(authenticationModelRegister);
+    } on Exception catch (e) {
+      return Left(ServerFailure(code: 500, message: e.toString()));
     }
   }
 }

@@ -11,6 +11,7 @@ class AuthenticationBloc
       : super(AuthenticationLoginInitial()) {
     on<LoginEvent>(_onLogin);
     on<LogoutEvent>(_onLogout);
+    on<RegisterEvent>(_onRegister);
   }
 
   Future<void> _onLogin(
@@ -24,6 +25,20 @@ class AuthenticationBloc
       (error) => emit(AuthenticationLoginError(failure: error)),
       (data) =>
           emit(AuthenticationLoginSuccess(authenticationModelLogin: data)),
+    );
+  }
+
+  Future<void> _onRegister(
+      RegisterEvent event, Emitter<AuthenticationState> emit) async {
+    emit(AuthenticationRegisterLoading());
+
+    final result = await authenticationUsecaseImpl.callRegister(
+        event.name, event.email, event.password, event.cPassword);
+
+    result.fold(
+      (error) => emit(AuthenticationRegisterError(failure: error)),
+      (data) => emit(
+          AuthenticationRegisterSuccess(authenticationModelRegister: data)),
     );
   }
 

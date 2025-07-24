@@ -4,9 +4,11 @@ import 'package:frontend/features/authentication/data/models/authentication_mode
 import 'package:frontend/features/authentication/data/repositories/authentication_repository.dart';
 
 abstract class AuthenticationUsecase {
-  Future<Either<Failure, AuthenticationModelLogin>> callLogin(
+  Future<Either<Failure, AuthenticationModel>> callLogin(
       String email, String password);
   Future<Either<Failure, AuthenticationModelLogout>> callLogout();
+  Future<Either<Failure, AuthenticationModel>> callRegister(
+      String name, String email, String password, String cPassword);
 }
 
 class AuthenticationUsecaseImpl implements AuthenticationUsecase {
@@ -15,7 +17,7 @@ class AuthenticationUsecaseImpl implements AuthenticationUsecase {
   AuthenticationUsecaseImpl({required this.authenticationRepository});
 
   @override
-  Future<Either<Failure, AuthenticationModelLogin>> callLogin(
+  Future<Either<Failure, AuthenticationModel>> callLogin(
       String email, String password) {
     return authenticationRepository.userLogin(email, password);
   }
@@ -23,5 +25,12 @@ class AuthenticationUsecaseImpl implements AuthenticationUsecase {
   @override
   Future<Either<Failure, AuthenticationModelLogout>> callLogout() {
     return authenticationRepository.userLogout();
+  }
+
+  @override
+  Future<Either<Failure, AuthenticationModel>> callRegister(
+      String name, String email, String password, String cPassword) async {
+    return authenticationRepository.userRegister(
+        name, email, password, cPassword);
   }
 }

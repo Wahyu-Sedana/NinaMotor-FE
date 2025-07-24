@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 void logger(dynamic value, {String? label}) {
@@ -16,3 +17,6 @@ final formatCurrency = NumberFormat.currency(
   symbol: 'Rp ',
   decimalDigits: 0,
 );
+
+final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();

@@ -15,7 +15,7 @@ class ProfileDatasourceImpl implements ProfileDatasource {
 
   @override
   Future<ProfileModel> getProfile() async {
-    final path = '$baseURL/profile';
+    final path = '${baseURL}profile';
     final session = locator<Session>();
     try {
       final response = await dio.post(path,

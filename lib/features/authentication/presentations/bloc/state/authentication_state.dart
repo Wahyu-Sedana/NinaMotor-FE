@@ -12,17 +12,39 @@ class AuthenticationLoginLoading extends AuthenticationState {}
 class AuthenticationLoginInitial extends AuthenticationState {}
 
 class AuthenticationLoginSuccess extends AuthenticationState {
-  final AuthenticationModelLogin authenticationModelLogin;
+  final AuthenticationModel authenticationModelLogin;
   AuthenticationLoginSuccess({
     required this.authenticationModelLogin,
   });
   @override
-  List<Object> get props => [AuthenticationModelLogin];
+  List<Object> get props => [User];
 }
 
 class AuthenticationLoginError extends AuthenticationState {
   final Failure failure;
   AuthenticationLoginError({
+    required this.failure,
+  });
+  @override
+  List<Object> get props => [failure];
+}
+
+class AuthenticationRegisterLoading extends AuthenticationState {}
+
+class AuthenticationRegisterInitial extends AuthenticationState {}
+
+class AuthenticationRegisterSuccess extends AuthenticationState {
+  final AuthenticationModel authenticationModelRegister;
+  AuthenticationRegisterSuccess({
+    required this.authenticationModelRegister,
+  });
+  @override
+  List<Object> get props => [User];
+}
+
+class AuthenticationRegisterError extends AuthenticationState {
+  final Failure failure;
+  AuthenticationRegisterError({
     required this.failure,
   });
   @override
@@ -47,25 +69,3 @@ class AuthenticationLogoutError extends AuthenticationState {
   @override
   List<Object> get props => [failure];
 }
-
-// class AuthenticationRegisterLoading extends AuthenticationState {}
-
-// class AuthenticationRegisterInitial extends AuthenticationState {}
-
-// class AuthenticationRegisterSuccess extends AuthenticationState {
-//   final AuthenticationModelRegister authenticationModelRegister;
-//   AuthenticationRegisterSuccess({
-//     required this.authenticationModelRegister,
-//   });
-//   @override
-//   List<Object> get props => [AuthenticationModelLogin];
-// }
-
-// class AuthenticationRegisterError extends AuthenticationState {
-//   final Failure failure;
-//   AuthenticationRegisterError({
-//     required this.failure,
-//   });
-//   @override
-//   List<Object> get props => [failure];
-// }

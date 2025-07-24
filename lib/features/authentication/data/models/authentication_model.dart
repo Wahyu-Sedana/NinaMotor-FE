@@ -1,18 +1,45 @@
-class AuthenticationModelLogin {
-  final String email;
-  final String password;
+class AuthenticationModel {
+  final int status;
+  final String message;
+  final User user;
   final String token;
 
-  AuthenticationModelLogin(
-      {required this.token, required this.email, required this.password});
+  AuthenticationModel(
+      {required this.token,
+      required this.status,
+      required this.message,
+      required this.user});
 
-  Map<String, String> toJson() {
-    return {'email': email, 'password': password};
+  Map<String, dynamic> toJson() {
+    return {'token': token, 'status': status, 'message': message, 'user': user};
   }
 
-  factory AuthenticationModelLogin.fromJson(Map<String, dynamic> json) {
-    return AuthenticationModelLogin(
-        token: json['token'] ?? "",
+  factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
+    return AuthenticationModel(
+      token: json['token'] ?? "",
+      status: json['status'] ?? 0,
+      message: json['message'] ?? "",
+      user: (json['user'] is Map)
+          ? User.fromJson(json['user'])
+          : User(name: "", email: "", password: ""),
+    );
+  }
+}
+
+class User {
+  final String name;
+  final String email;
+  final String password;
+
+  User({required this.name, required this.email, required this.password});
+
+  Map<String, String> toJson() {
+    return {'nama': name, 'email': email, 'password': password};
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        name: json['nama'] ?? "",
         email: json['email'] ?? "",
         password: json['password'] ?? "");
   }
