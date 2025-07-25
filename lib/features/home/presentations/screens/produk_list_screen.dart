@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/state/produk_state.dart';
+import 'package:frontend/features/home/presentations/screens/produk_detail_screen.dart';
 import 'package:frontend/features/home/presentations/widgets/shimmer_widget.dart';
 import 'package:frontend/features/home/presentations/bloc/event/produk_event.dart';
 
@@ -94,7 +95,7 @@ class _ProdukListScreenState extends State<ProdukListScreen> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 0.7,
+                        childAspectRatio: 0.6,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
                       ),
@@ -106,7 +107,7 @@ class _ProdukListScreenState extends State<ProdukListScreen> {
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha: 0.08),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -124,7 +125,7 @@ class _ProdukListScreenState extends State<ProdukListScreen> {
                                     ),
                                     child: item.gambarProduk.isNotEmpty
                                         ? Image.network(
-                                            item.gambarProduk,
+                                            'http://127.0.0.1:8000/storage/${item.gambarProduk}',
                                             height: 140,
                                             width: double.infinity,
                                             fit: BoxFit.cover,
@@ -199,9 +200,14 @@ class _ProdukListScreenState extends State<ProdukListScreen> {
                                     const SizedBox(height: 8),
                                     GestureDetector(
                                       onTap: () {
-                                        debugPrint(
-                                            "Selengkapnya untuk: ${item.nama}");
-                                        // TODO: Navigasi ke halaman detail
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                SparepartDetailScreen(
+                                                    sparepart: item),
+                                          ),
+                                        );
                                       },
                                       child: const Text(
                                         "Selengkapnya →",

@@ -50,7 +50,7 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Colors.grey.withValues(alpha: 0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 )
@@ -61,7 +61,7 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(24),
                   child: Image.network(
-                    'https://astraotoshop.com/asset/article-aop/mengatasi-kerusakan-pada-sparepart-motor-matic%20(1)_20240228.webp',
+                    'http://127.0.0.1:8000/storage/${sparepart.gambarProduk}',
                     height: 200,
                     width: double.infinity,
                     fit: BoxFit.cover,

@@ -5,7 +5,7 @@ import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/profile/data/models/profile_model.dart';
 
 abstract class ProfileDatasource {
-  Future<ProfileModel> getProfile();
+  Future<ProfileResponse> getProfile();
 }
 
 class ProfileDatasourceImpl implements ProfileDatasource {
@@ -14,7 +14,7 @@ class ProfileDatasourceImpl implements ProfileDatasource {
   ProfileDatasourceImpl({required this.dio});
 
   @override
-  Future<ProfileModel> getProfile() async {
+  Future<ProfileResponse> getProfile() async {
     final path = '${baseURL}profile';
     final session = locator<Session>();
     try {
@@ -24,7 +24,7 @@ class ProfileDatasourceImpl implements ProfileDatasource {
               'Authorization': 'Bearer ${session.getToken}',
             },
           ));
-      return ProfileModel.fromJson(response.data);
+      return ProfileResponse.fromJson(response.data);
     } catch (e) {
       throw e.toString();
     }

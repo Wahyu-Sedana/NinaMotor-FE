@@ -1,3 +1,23 @@
+class ProfileResponse {
+  final int status;
+  final String message;
+  final ProfileModel user;
+
+  ProfileResponse({
+    required this.status,
+    required this.message,
+    required this.user,
+  });
+
+  factory ProfileResponse.fromJson(Map<String, dynamic> json) {
+    return ProfileResponse(
+      status: json['status'],
+      message: json['message'],
+      user: ProfileModel.fromJson(json['user']),
+    );
+  }
+}
+
 class ProfileModel {
   final String id;
   final String nama;

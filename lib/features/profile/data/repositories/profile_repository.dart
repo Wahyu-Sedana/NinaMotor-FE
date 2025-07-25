@@ -4,7 +4,7 @@ import 'package:frontend/features/profile/data/datasources/profile_datasource.da
 import 'package:frontend/features/profile/data/models/profile_model.dart';
 
 abstract class ProfileRepository {
-  Future<Either<Failure, ProfileModel>> getProfile();
+  Future<Either<Failure, ProfileResponse>> getProfile();
 }
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -12,7 +12,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl({required this.datasource});
 
   @override
-  Future<Either<Failure, ProfileModel>> getProfile() async {
+  Future<Either<Failure, ProfileResponse>> getProfile() async {
     try {
       final getProfile = await datasource.getProfile();
       return Right(getProfile);

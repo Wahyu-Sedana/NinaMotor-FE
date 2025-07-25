@@ -4,7 +4,7 @@ import 'package:frontend/features/profile/data/models/profile_model.dart';
 import 'package:frontend/features/profile/data/repositories/profile_repository.dart';
 
 abstract class ProfileUsecase {
-  Future<Either<Failure, ProfileModel>> callProfile();
+  Future<Either<Failure, ProfileResponse>> callProfile();
 }
 
 class ProfileUsecaseImpl implements ProfileUsecase {
@@ -12,7 +12,7 @@ class ProfileUsecaseImpl implements ProfileUsecase {
   ProfileUsecaseImpl({required this.repository});
 
   @override
-  Future<Either<Failure, ProfileModel>> callProfile() async {
+  Future<Either<Failure, ProfileResponse>> callProfile() async {
     return repository.getProfile();
   }
 }

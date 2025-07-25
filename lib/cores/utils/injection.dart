@@ -7,6 +7,10 @@ import 'package:frontend/features/home/domain/usecases/kategori_usecase.dart';
 import 'package:frontend/features/home/domain/usecases/produk_usecase.dart';
 import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
+import 'package:frontend/features/profile/data/datasources/profile_datasource.dart';
+import 'package:frontend/features/profile/data/repositories/profile_repository.dart';
+import 'package:frontend/features/profile/domain/usecases/profile_usecase.dart';
+import 'package:frontend/features/profile/presentations/bloc/profile_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,35 +43,47 @@ Future<void> locatorInit() async {
   locator.registerFactory<KategoriBloc>(
     () => KategoriBloc(kategoriUsecaseImpl: locator()),
   );
+  locator.registerFactory<ProfileBloc>(
+    () => ProfileBloc(profileUsecaseImpl: locator()),
+  );
 
-  // Auth Feature
+  // DataSource
   locator.registerLazySingleton<AuthenticationDatasource>(
       () => AuthenticationDataSourceImpl(dio: locator<Dio>()));
+  locator.registerLazySingleton<KategoriDatasource>(
+      () => KategoriDataSourceImpl(dio: locator<Dio>()));
+  locator.registerLazySingleton<SparepartDatasource>(
+      () => SparepartDataSourceImpl(dio: locator<Dio>()));
+  locator.registerLazySingleton<ProfileDatasource>(
+    () => ProfileDatasourceImpl(dio: locator<Dio>()),
+  );
+
+  // UseCase
+  locator.registerLazySingleton<AuthenticationUsecaseImpl>(
+      () => AuthenticationUsecaseImpl(authenticationRepository: locator()));
+  locator.registerLazySingleton<KategoriUsecaseImpl>(
+    () => KategoriUsecaseImpl(repository: locator()),
+  );
+  locator.registerLazySingleton<SparepartUsecaseImpl>(
+    () => SparepartUsecaseImpl(repository: locator()),
+  );
+  locator.registerLazySingleton<ProfileUsecaseImpl>(
+    () => ProfileUsecaseImpl(repository: locator()),
+  );
+
+  // Repository
+  locator.registerLazySingleton<SparepartRepository>(
+    () => SparepartRepositoryImpl(sparepartDatasource: locator()),
+  );
   locator.registerLazySingleton<AuthenticationRepository>(
     () => AuthenticationRepositoryImpl(
       authenticationDatasource: locator<AuthenticationDatasource>(),
     ),
   );
-  locator.registerLazySingleton<AuthenticationUsecaseImpl>(
-      () => AuthenticationUsecaseImpl(authenticationRepository: locator()));
-
-  // Sparepart Feature
-  locator.registerLazySingleton<SparepartDatasource>(
-      () => SparepartDataSourceImpl(dio: locator<Dio>()));
-  locator.registerLazySingleton<SparepartRepository>(
-    () => SparepartRepositoryImpl(sparepartDatasource: locator()),
-  );
-  locator.registerLazySingleton<SparepartUsecaseImpl>(
-    () => SparepartUsecaseImpl(repository: locator()),
-  );
-
-  // Kategori Feature
-  locator.registerLazySingleton<KategoriDatasource>(
-      () => KategoriDataSourceImpl(dio: locator<Dio>()));
   locator.registerLazySingleton<KategoriRepository>(
     () => KategoriRepositoryImpl(kategoriDatasource: locator()),
   );
-  locator.registerLazySingleton<KategoriUsecaseImpl>(
-    () => KategoriUsecaseImpl(repository: locator()),
+  locator.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(datasource: locator()),
   );
 }

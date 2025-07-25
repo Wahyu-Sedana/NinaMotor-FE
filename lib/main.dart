@@ -7,6 +7,7 @@ import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/presentations/bloc/authentication_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
+import 'package:frontend/features/profile/presentations/bloc/profile_bloc.dart';
 import 'package:frontend/features/routes/route.dart';
 
 Future<void> main() async {
@@ -43,6 +44,8 @@ class MainApp extends StatelessWidget {
               kategoriUsecaseImpl: locator(),
             ),
           ),
+          BlocProvider(
+              create: (context) => ProfileBloc(profileUsecaseImpl: locator()))
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

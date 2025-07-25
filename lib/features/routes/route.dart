@@ -27,7 +27,6 @@ class RouteService {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case listProdukRoute:
         return MaterialPageRoute(builder: (_) => const ProdukListScreen());
-
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

@@ -280,7 +280,7 @@ class HomeTab extends StatelessWidget {
                                           topRight: Radius.circular(16)),
                                       child: item.gambarProduk.isNotEmpty
                                           ? Image.network(
-                                              item.gambarProduk,
+                                              'http://127.0.0.1:8000/storage/${item.gambarProduk}',
                                               height: 140,
                                               width: double.infinity,
                                               fit: BoxFit.cover,
