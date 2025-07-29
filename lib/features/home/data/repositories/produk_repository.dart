@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/features/home/data/datasources/produk_datasource.dart';
+import 'package:frontend/features/home/data/models/bookmark_model.dart';
 import 'package:frontend/features/home/data/models/cart_model.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 
@@ -15,6 +16,10 @@ abstract class SparepartRepository {
   Future<Either<Failure, CartResponse>> removeCartItem({
     required String sparepartId,
   });
+  Future<Either<Failure, BookmarkResponseModel>> addItemBookmark({
+    required String sparepartId,
+  });
+  Future<Either<Failure, BookmarkResponseModel>> getBookmark();
 }
 
 class SparepartRepositoryImpl implements SparepartRepository {
@@ -64,6 +69,28 @@ class SparepartRepositoryImpl implements SparepartRepository {
     try {
       final result =
           await sparepartDatasource.removeItemCart(sparepartId: sparepartId);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, BookmarkResponseModel>> addItemBookmark(
+      {required String sparepartId}) async {
+    try {
+      final result =
+          await sparepartDatasource.addBookmark(sparepartId: sparepartId);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, BookmarkResponseModel>> getBookmark() async {
+    try {
+      final result = await sparepartDatasource.getBookmark();
       return Right(result);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));

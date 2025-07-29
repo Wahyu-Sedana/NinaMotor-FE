@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:frontend/cores/errors/failure.dart';
+import 'package:frontend/features/home/data/models/bookmark_model.dart';
 import 'package:frontend/features/home/data/models/cart_model.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 
@@ -30,7 +31,6 @@ class SparepartError extends SparepartState {
   List<Object?> get props => [failure];
 }
 
-// Tambahan untuk Cart
 class CartLoading extends SparepartState {}
 
 class CartSuccess extends SparepartState {
@@ -46,6 +46,31 @@ class CartFailure extends SparepartState {
   final Failure failure;
 
   CartFailure({required this.failure});
+
+  @override
+  List<Object?> get props => [failure];
+}
+
+class BookmarkLoading extends SparepartState {}
+
+class BookmarkSuccess extends SparepartState {
+  final List<BookmarkModel> data;
+
+  BookmarkSuccess({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
+class GetBookmarkListSuccess extends SparepartState {
+  final List<BookmarkModel> bookmarks;
+  GetBookmarkListSuccess({required this.bookmarks});
+}
+
+class BookmarkFailure extends SparepartState {
+  final Failure failure;
+
+  BookmarkFailure({required this.failure});
 
   @override
   List<Object?> get props => [failure];

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/cores/errors/failure.dart';
+import 'package:frontend/features/home/data/models/bookmark_model.dart';
 import 'package:frontend/features/home/data/models/cart_model.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/data/repositories/produk_repository.dart';
@@ -13,6 +14,10 @@ abstract class SparepartUsecase {
   Future<Either<Failure, CartResponse>> getItemCart();
   Future<Either<Failure, CartResponse>> removeItemCart(
       {required String sparepartId});
+  Future<Either<Failure, BookmarkResponseModel>> addItemBookmark({
+    required String sparepartId,
+  });
+  Future<Either<Failure, BookmarkResponseModel>> getBookmark();
 }
 
 class SparepartUsecaseImpl implements SparepartUsecase {
@@ -45,5 +50,16 @@ class SparepartUsecaseImpl implements SparepartUsecase {
   Future<Either<Failure, CartResponse>> removeItemCart(
       {required String sparepartId}) async {
     return repository.removeCartItem(sparepartId: sparepartId);
+  }
+
+  @override
+  Future<Either<Failure, BookmarkResponseModel>> addItemBookmark(
+      {required String sparepartId}) async {
+    return repository.addItemBookmark(sparepartId: sparepartId);
+  }
+
+  @override
+  Future<Either<Failure, BookmarkResponseModel>> getBookmark() async {
+    return repository.getBookmark();
   }
 }

@@ -13,6 +13,8 @@ class SparepartBloc extends Bloc<SparepartEvent, SparepartState> {
     on<AddToCartEvent>(_onAddToCart);
     on<GetItemCartEvent>(_onGetItemCart);
     on<RemoveFromCartEvent>(_onRemoveItemCart);
+    on<AddToItemBookmarkEvent>(_onItemBookmark);
+    on<GetItemBookmarkEvent>(_onGetItemBookmark);
   }
 
   Future<void> _onGetAllSpareparts(
@@ -78,6 +80,39 @@ class SparepartBloc extends Bloc<SparepartEvent, SparepartState> {
         emit(CartSuccess(data: data));
         await Future.delayed(Duration(milliseconds: 300));
         add(GetItemCartEvent());
+      },
+    );
+  }
+
+  Future<void> _onItemBookmark(
+      AddToItemBookmarkEvent event, Emitter<SparepartState> emit) async {
+    emit(BookmarkLoading());
+    final result = await sparepartUsecaseImpl.addItemBookmark(
+        sparepartId: event.sparepartId);
+    result.fold(
+      (failure) async {
+        logger(failure);
+        emit(BookmarkFailure(failure: failure));
+      },
+      (data) async {
+        emit(BookmarkSuccess(data: data.data));
+        await Future.delayed(Duration(milliseconds: 300));
+      },
+    );
+  }
+
+  Future<void> _onGetItemBookmark(
+      GetItemBookmarkEvent event, Emitter<SparepartState> emit) async {
+    emit(BookmarkLoading());
+    final result = await sparepartUsecaseImpl.getBookmark();
+    result.fold(
+      (failure) async {
+        logger(failure);
+        emit(BookmarkFailure(failure: failure));
+      },
+      (data) async {
+        emit(GetBookmarkListSuccess(bookmarks: data.data));
+        await Future.delayed(Duration(milliseconds: 300));
       },
     );
   }

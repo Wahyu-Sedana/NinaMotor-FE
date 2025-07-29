@@ -120,10 +120,37 @@ class _CartTabState extends State<CartTab> {
                                   icon: const Icon(Icons.delete_outline,
                                       color: Colors.red),
                                   onPressed: () {
-                                    context.read<SparepartBloc>().add(
-                                          RemoveFromCartEvent(
-                                              sparepartId: cart.sparepartId),
-                                        );
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) {
+                                          return AlertDialog(
+                                            title:
+                                                Text('Hapus Item ${cart.nama}'),
+                                            content: const Text(
+                                                'Apakah Anda yakin ingin menghapus sparepart ini?'),
+                                            actions: [
+                                              TextButton(
+                                                child: Text("Hapus"),
+                                                onPressed: () {
+                                                  context
+                                                      .read<SparepartBloc>()
+                                                      .add(
+                                                        RemoveFromCartEvent(
+                                                            sparepartId: cart
+                                                                .sparepartId),
+                                                      );
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text("Batal"),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        });
                                   },
                                 ),
                               ],

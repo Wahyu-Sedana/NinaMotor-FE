@@ -3,6 +3,7 @@ import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/cores/utils/session.dart';
+import 'package:frontend/features/home/data/models/bookmark_model.dart';
 import 'package:frontend/features/home/data/models/cart_model.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 
@@ -14,6 +15,10 @@ abstract class SparepartDatasource {
   });
   Future<CartResponse> getItemCart();
   Future<CartResponse> removeItemCart({required String sparepartId});
+  Future<BookmarkResponseModel> addBookmark({
+    required String sparepartId,
+  });
+  Future<BookmarkResponseModel> getBookmark();
 }
 
 class SparepartDataSourceImpl implements SparepartDatasource {
@@ -103,6 +108,46 @@ class SparepartDataSourceImpl implements SparepartDatasource {
     } on DioException catch (e) {
       logger(e.message ?? e.toString(), label: "Remove Data Cart Error");
       throw Exception("Gagal menghapus data keranjang");
+    }
+  }
+
+  @override
+  Future<BookmarkResponseModel> addBookmark(
+      {required String sparepartId}) async {
+    final String url = '${baseURL}bookmark';
+    final session = locator<Session>();
+    try {
+      final response = await dio.post(url,
+          data: {
+            'sparepart_id': sparepartId,
+          },
+          options: Options(headers: {
+            'Authorization': 'Bearer ${session.getToken}',
+            'Accept': 'application/json',
+          }));
+
+      return BookmarkResponseModel.fromJson(response.data);
+    } on DioException catch (e) {
+      logger(e.message ?? e.toString(), label: "Add Data Bookmark Error");
+      throw Exception("Gagal menambah data bookmark");
+    }
+  }
+
+  @override
+  Future<BookmarkResponseModel> getBookmark() async {
+    final String url = '${baseURL}bookmark';
+    final session = locator<Session>();
+    try {
+      final response = await dio.get(url,
+          options: Options(headers: {
+            'Authorization': 'Bearer ${session.getToken}',
+            'Accept': 'application/json',
+          }));
+
+      return BookmarkResponseModel.fromJson(response.data);
+    } on DioException catch (e) {
+      logger(e.message ?? e.toString(), label: "Get Data Bookmark Error");
+      throw Exception("Gagal mengambil data bookmark");
     }
   }
 }

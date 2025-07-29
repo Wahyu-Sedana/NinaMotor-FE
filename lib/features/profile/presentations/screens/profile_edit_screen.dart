@@ -19,8 +19,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   late TextEditingController _namaController;
   late TextEditingController _emailController;
   late TextEditingController _alamatController;
-  late TextEditingController _noKendaraanController;
-  late TextEditingController _namaKendaraanController;
+  // late TextEditingController _noKendaraanController;
+  // late TextEditingController _namaKendaraanController;
   File? _imageFile;
 
   @override
@@ -30,10 +30,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _emailController = TextEditingController(text: widget.profile.email);
     _alamatController =
         TextEditingController(text: widget.profile.alamat ?? '');
-    _noKendaraanController =
-        TextEditingController(text: widget.profile.noKendaraan ?? '');
-    _namaKendaraanController =
-        TextEditingController(text: widget.profile.namaKendaraan ?? '');
+    // _noKendaraanController =
+    //     TextEditingController(text: widget.profile.noKendaraan ?? '');
+    // _namaKendaraanController =
+    //     TextEditingController(text: widget.profile.namaKendaraan ?? '');
   }
 
   @override
@@ -41,8 +41,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _namaController.dispose();
     _emailController.dispose();
     _alamatController.dispose();
-    _noKendaraanController.dispose();
-    _namaKendaraanController.dispose();
+    // _noKendaraanController.dispose();
+    // _namaKendaraanController.dispose();
     super.dispose();
   }
 
@@ -70,7 +70,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         createdAt: widget.profile.createdAt,
         updatedAt: widget.profile.updatedAt,
       );
-
       // TODO: Send updatedProfile to backend
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Profil berhasil disimpan")),
@@ -152,16 +151,16 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 controller: _alamatController,
                 label: 'Alamat',
               ),
-              const SizedBox(height: 16),
-              buildTextField(
-                controller: _noKendaraanController,
-                label: 'No Kendaraan',
-              ),
-              const SizedBox(height: 16),
-              buildTextField(
-                controller: _namaKendaraanController,
-                label: 'Nama Kendaraan',
-              ),
+              // const SizedBox(height: 16),
+              // buildTextField(
+              //   controller: _noKendaraanController,
+              //   label: 'No Kendaraan',
+              // ),
+              // const SizedBox(height: 16),
+              // buildTextField(
+              //   controller: _namaKendaraanController,
+              //   label: 'Nama Kendaraan',
+              // ),
               const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,

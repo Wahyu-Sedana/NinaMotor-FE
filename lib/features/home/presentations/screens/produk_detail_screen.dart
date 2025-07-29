@@ -26,6 +26,7 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
   void initState() {
     super.initState();
     totalHarga = double.parse(widget.sparepart.hargaJual) * quantity;
+    context.read<SparepartBloc>().add(GetItemBookmarkEvent());
   }
 
   @override
@@ -53,6 +54,27 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Gagal: ${state.failure.message}")),
             );
+          } else if (state is BookmarkSuccess) {
+            setState(() {
+              isBookmarked = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Bookmark berhasil diupdate')),
+            );
+          } else if (state is GetBookmarkListSuccess) {
+            final bookmarkedIds =
+                state.bookmarks.map((b) => b.sparepartId).toList();
+            setState(() {
+              isBookmarked =
+                  bookmarkedIds.contains(widget.sparepart.kodeSparepart);
+              isBookmarked = true;
+            });
+          } else if (state is BookmarkFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content:
+                      Text('Gagal update bookmark: ${state.failure.message}')),
+            );
           }
         },
         child: Scaffold(
@@ -72,7 +94,18 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
                   color: isBookmarked ? Colors.pink : Colors.white,
                 ),
                 onPressed: () {
-                  setState(() => isBookmarked = !isBookmarked);
+                  if (!isBookmarked) {
+                    context.read<SparepartBloc>().add(
+                          AddToItemBookmarkEvent(
+                              sparepartId: sparepart.kodeSparepart),
+                        );
+                  }
+                  // else {
+                  //   context.read<SparepartBloc>().add(
+                  //         RemoveFromBookmarkEvent(
+                  //             sparepartId: sparepart.kodeSparepart),
+                  //       );
+                  // }
                 },
               )
             ],

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/cores/utils/colors.dart';
+import 'package:frontend/features/home/presentations/screens/bookmark_tab.dart';
 import 'package:frontend/features/home/presentations/screens/cart_tab.dart';
 import 'package:frontend/features/home/presentations/screens/home_tab.dart';
 import 'package:frontend/features/profile/presentations/screens/profile_tab.dart';
+import 'package:frontend/features/servismotor/presentations/screens/service_motor_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,9 +17,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final _pages = [
     const CartTab(),
-    const Center(child: Text("Bookmark")),
+    const BookmarkTab(),
     const HomeTab(),
-    const Center(child: Text("Service Motor")),
+    const ServiceMotorTab(),
     const ProfileTab(),
   ];
 
