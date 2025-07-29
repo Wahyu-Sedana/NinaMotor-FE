@@ -12,6 +12,9 @@ abstract class SparepartRepository {
     required int quantity,
   });
   Future<Either<Failure, CartResponse>> getItemCart();
+  Future<Either<Failure, CartResponse>> removeCartItem({
+    required String sparepartId,
+  });
 }
 
 class SparepartRepositoryImpl implements SparepartRepository {
@@ -49,6 +52,18 @@ class SparepartRepositoryImpl implements SparepartRepository {
   Future<Either<Failure, CartResponse>> getItemCart() async {
     try {
       final result = await sparepartDatasource.getItemCart();
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CartResponse>> removeCartItem(
+      {required String sparepartId}) async {
+    try {
+      final result =
+          await sparepartDatasource.removeItemCart(sparepartId: sparepartId);
       return Right(result);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));

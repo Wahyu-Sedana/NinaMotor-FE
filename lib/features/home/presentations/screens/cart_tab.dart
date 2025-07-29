@@ -39,7 +39,6 @@ class _CartTabState extends State<CartTab> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // 🔍 Search Bar
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -54,51 +53,90 @@ class _CartTabState extends State<CartTab> {
               },
             ),
             const SizedBox(height: 16),
-
-            // 🛒 Daftar Cart
             Expanded(
               child: BlocBuilder<SparepartBloc, SparepartState>(
-                builder: (context, state) {
-                  if (state is CartLoading) {
+                  builder: (context, state) {
+                switch (state) {
+                  case CartLoading():
                     return const Center(child: CircularProgressIndicator());
-                  }
 
-                  if (state is CartFailure) {
-                    return Center(child: Text('Gagal memuat keranjang'));
-                  }
+                  case CartFailure():
+                    return const Center(child: Text('Gagal memuat keranjang'));
 
-                  if (state is CartSuccess) {
+                  case CartSuccess():
                     final carts = state.data;
-
-                    if (carts.data == null) {
+                    if (carts.data == null || carts.data!.items.isEmpty) {
                       return const Center(child: Text('Keranjang kosong'));
                     }
-
                     return ListView.builder(
                       itemCount: carts.data!.items.length,
                       itemBuilder: (context, index) {
                         final cart = carts.data!.items[index];
-                        return CheckboxListTile(
-                          value: _selectedCartIds.contains(cart.sparepartId),
-                          onChanged: (val) =>
-                              _onItemChecked(val, cart.sparepartId),
-                          title: Text(cart.nama),
-                          subtitle: Text('Jumlah: ${cart.quantity}'),
-                          secondary: Image.network(
-                            'http://127.0.0.1:8000/storage/${cart.gambar}',
-                            width: 50,
-                            height: 50,
-                            errorBuilder: (_, __, ___) =>
-                                const Icon(Icons.image_not_supported),
+                        return Card(
+                          elevation: 2,
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Checkbox(
+                                  value: _selectedCartIds
+                                      .contains(cart.sparepartId),
+                                  onChanged: (val) =>
+                                      _onItemChecked(val, cart.sparepartId),
+                                ),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    'http://127.0.0.1:8000/storage/${cart.gambar}',
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) =>
+                                        const Icon(Icons.image_not_supported),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cart.nama,
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text('Jumlah: ${cart.quantity}'),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline,
+                                      color: Colors.red),
+                                  onPressed: () {
+                                    context.read<SparepartBloc>().add(
+                                          RemoveFromCartEvent(
+                                              sparepartId: cart.sparepartId),
+                                        );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
                     );
-                  }
 
-                  return const SizedBox();
-                },
-              ),
+                  default:
+                    return const SizedBox();
+                }
+              }),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -120,8 +158,8 @@ class _CartTabState extends State<CartTab> {
                     onPressed: _selectedCartIds.isEmpty
                         ? null
                         : () {
-                            debugPrint('Selected cart IDs: $_selectedCartIds');
-                            // Navigasi atau aksi checkout di sini
+                            debugPrint('Checkout items: $_selectedCartIds');
+                            // TODO: Checkout logic
                           },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,

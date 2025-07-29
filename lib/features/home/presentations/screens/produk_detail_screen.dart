@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/utils/colors.dart';
+import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/presentations/bloc/event/produk_event.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
@@ -18,6 +19,14 @@ class SparepartDetailScreen extends StatefulWidget {
 class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
   int quantity = 1;
   bool isBookmarked = false;
+  bool _isLoading = false;
+  double totalHarga = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    totalHarga = double.parse(widget.sparepart.hargaJual) * quantity;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +35,21 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
     return BlocListener<SparepartBloc, SparepartState>(
         listener: (context, state) {
           if (state is CartLoading) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Menambahkan ke keranjang...")),
-            );
+            setState(() {
+              _isLoading = true;
+            });
           } else if (state is CartSuccess) {
+            setState(() {
+              _isLoading = false;
+            });
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                   content: Text("Berhasil ditambahkan ke keranjang")),
             );
           } else if (state is CartFailure) {
+            setState(() {
+              _isLoading = false;
+            });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Gagal: ${state.failure.message}")),
             );
@@ -132,15 +147,28 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
                                 icon: const Icon(Icons.remove_circle_outline),
                                 onPressed: () {
                                   if (quantity > 1) {
-                                    setState(() => quantity--);
+                                    setState(() {
+                                      quantity--;
+                                      totalHarga =
+                                          double.parse(sparepart.hargaJual) *
+                                              quantity;
+                                    });
                                   }
                                 },
                               ),
                               Text('$quantity'),
                               IconButton(
-                                icon: const Icon(Icons.add_circle_outline),
-                                onPressed: () => setState(() => quantity++),
-                              ),
+                                  icon: const Icon(Icons.add_circle_outline),
+                                  onPressed: () {
+                                    if (quantity < widget.sparepart.stok) {
+                                      setState(() {
+                                        quantity++;
+                                        totalHarga =
+                                            double.parse(sparepart.hargaJual) *
+                                                quantity;
+                                      });
+                                    }
+                                  }),
                             ],
                           ),
                         ],
@@ -172,34 +200,40 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Rp ${sparepart.hargaJual}",
+                          formatIDR(totalHarga),
                           style: const TextStyle(
                             fontSize: 24,
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        ElevatedButton(
-                            onPressed: () {
-                              context.read<SparepartBloc>().add(
-                                    AddToCartEvent(
-                                      sparepartId: sparepart.kodeSparepart,
-                                      quantity: quantity,
-                                    ),
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.shopping_cart_checkout,
-                              color: white,
-                            )),
+                        _isLoading
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  context.read<SparepartBloc>().add(
+                                        AddToCartEvent(
+                                          sparepartId: sparepart.kodeSparepart,
+                                          quantity: quantity,
+                                        ),
+                                      );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.shopping_cart_checkout,
+                                  color: white,
+                                ),
+                              )
                       ],
                     ),
                   ))

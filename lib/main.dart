@@ -48,6 +48,7 @@ class MainApp extends StatelessWidget {
               create: (context) => ProfileBloc(profileUsecaseImpl: locator()))
         ],
         child: MaterialApp(
+          navigatorObservers: [routeObserver],
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           onGenerateRoute: RouteService.generateRoute,

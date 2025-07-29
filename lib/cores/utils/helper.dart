@@ -12,11 +12,13 @@ void logger(dynamic value, {String? label}) {
   }
 }
 
-final formatCurrency = NumberFormat.currency(
-  locale: 'id_ID',
-  symbol: 'Rp ',
-  decimalDigits: 0,
-);
+String formatIDR(dynamic value) {
+  final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp');
+  return formatCurrency.format(value);
+}
 
 final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
+
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();

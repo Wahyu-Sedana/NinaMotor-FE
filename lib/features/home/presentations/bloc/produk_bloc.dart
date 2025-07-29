@@ -12,6 +12,7 @@ class SparepartBloc extends Bloc<SparepartEvent, SparepartState> {
     on<GetAllSparepartsEvent>(_onGetAllSpareparts);
     on<AddToCartEvent>(_onAddToCart);
     on<GetItemCartEvent>(_onGetItemCart);
+    on<RemoveFromCartEvent>(_onRemoveItemCart);
   }
 
   Future<void> _onGetAllSpareparts(
@@ -60,6 +61,24 @@ class SparepartBloc extends Bloc<SparepartEvent, SparepartState> {
         emit(CartFailure(failure: failure));
       },
       (data) => emit(CartSuccess(data: data)),
+    );
+  }
+
+  Future<void> _onRemoveItemCart(
+      RemoveFromCartEvent event, Emitter<SparepartState> emit) async {
+    emit(CartLoading());
+    final result = await sparepartUsecaseImpl.removeItemCart(
+        sparepartId: event.sparepartId);
+    result.fold(
+      (failure) async {
+        logger(failure);
+        emit(CartFailure(failure: failure));
+      },
+      (data) async {
+        emit(CartSuccess(data: data));
+        await Future.delayed(Duration(milliseconds: 300));
+        add(GetItemCartEvent());
+      },
     );
   }
 }

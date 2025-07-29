@@ -13,6 +13,7 @@ abstract class SparepartDatasource {
     required int quantity,
   });
   Future<CartResponse> getItemCart();
+  Future<CartResponse> removeItemCart({required String sparepartId});
 }
 
 class SparepartDataSourceImpl implements SparepartDatasource {
@@ -81,6 +82,27 @@ class SparepartDataSourceImpl implements SparepartDatasource {
     } on DioException catch (e) {
       logger(e.message ?? e.toString(), label: "Get Data Cart Error");
       throw Exception("Gagal mendapatkan data keranjang");
+    }
+  }
+
+  @override
+  Future<CartResponse> removeItemCart({required String sparepartId}) async {
+    final String url = '${baseURL}cart/remove';
+    final session = locator<Session>();
+    try {
+      final response = await dio.post(url,
+          data: {
+            'sparepart_id': sparepartId,
+          },
+          options: Options(headers: {
+            'Authorization': 'Bearer ${session.getToken}',
+            'Accept': 'application/json',
+          }));
+
+      return CartResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      logger(e.message ?? e.toString(), label: "Remove Data Cart Error");
+      throw Exception("Gagal menghapus data keranjang");
     }
   }
 }

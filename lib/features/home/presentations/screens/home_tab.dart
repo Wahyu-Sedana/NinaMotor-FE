@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/utils/colors.dart';
+import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/home/data/models/kategori_model.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/presentations/bloc/event/kategori_event.dart';
@@ -14,16 +15,41 @@ import 'package:frontend/features/home/presentations/screens/produk_detail_scree
 import 'package:frontend/features/home/presentations/widgets/shimmer_widget.dart';
 import 'package:frontend/features/routes/route.dart';
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<KategoriBloc>().add(GetAllKategoriEvent());
-      context.read<SparepartBloc>().add(GetAllSparepartsEvent());
-    });
+  State<HomeTab> createState() => _HomeTabState();
+}
 
+class _HomeTabState extends State<HomeTab> with RouteAware {
+  @override
+  void didPopNext() {
+    context.read<SparepartBloc>().add(GetAllSparepartsEvent());
+    super.didPopNext();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    context.read<KategoriBloc>().add(GetAllKategoriEvent());
+    context.read<SparepartBloc>().add(GetAllSparepartsEvent());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final List<String> imageUrls = [
       'https://images.unsplash.com/photo-1693566325736-dfa8479ad15f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       'https://plus.unsplash.com/premium_photo-1661960643553-ccfbf7d921f6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -69,37 +95,18 @@ class HomeTab extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      )
-                    ],
+                TextField(
+                  // controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Cari item...',
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search, color: Colors.grey),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            hintText: "Cari produk...",
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (value) {
-                            // TODO: Implementasi filter/search produk
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                  onChanged: (_) {
+                    // Optional: implement local search filter
+                  },
                 ),
                 const SizedBox(height: 16),
                 CarouselSlider(
@@ -302,7 +309,7 @@ class HomeTab extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
-                                        'Rp ${item.hargaJual}',
+                                        formatIDR(double.parse(item.hargaJual)),
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,

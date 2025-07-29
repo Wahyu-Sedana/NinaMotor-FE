@@ -17,4 +17,13 @@ class AddToCartEvent extends SparepartEvent {
   List<Object?> get props => [sparepartId, quantity];
 }
 
+class RemoveFromCartEvent extends SparepartEvent {
+  final String sparepartId;
+  RemoveFromCartEvent({
+    required this.sparepartId,
+  });
+  @override
+  List<Object?> get props => [sparepartId];
+}
+
 class GetItemCartEvent extends SparepartEvent {}

@@ -11,6 +11,8 @@ abstract class SparepartUsecase {
     required int quantity,
   });
   Future<Either<Failure, CartResponse>> getItemCart();
+  Future<Either<Failure, CartResponse>> removeItemCart(
+      {required String sparepartId});
 }
 
 class SparepartUsecaseImpl implements SparepartUsecase {
@@ -37,5 +39,11 @@ class SparepartUsecaseImpl implements SparepartUsecase {
   @override
   Future<Either<Failure, CartResponse>> getItemCart() async {
     return repository.getItemCart();
+  }
+
+  @override
+  Future<Either<Failure, CartResponse>> removeItemCart(
+      {required String sparepartId}) async {
+    return repository.removeCartItem(sparepartId: sparepartId);
   }
 }

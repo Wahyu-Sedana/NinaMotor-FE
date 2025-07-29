@@ -4,7 +4,7 @@ class SparepartModel {
   final String kodeSparepart;
   final String nama;
   final String? deskripsi;
-  final int stok;
+  int stok;
   final String hargaBeli;
   final String hargaJual;
   final String merk;

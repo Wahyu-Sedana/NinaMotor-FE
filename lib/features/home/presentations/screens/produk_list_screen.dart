@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/state/produk_state.dart';
@@ -14,13 +15,31 @@ class ProdukListScreen extends StatefulWidget {
   State<ProdukListScreen> createState() => _ProdukListScreenState();
 }
 
-class _ProdukListScreenState extends State<ProdukListScreen> {
+class _ProdukListScreenState extends State<ProdukListScreen> with RouteAware {
   String searchKeyword = '';
 
   @override
-  void initState() {
-    super.initState();
+  void didPopNext() {
     context.read<SparepartBloc>().add(GetAllSparepartsEvent());
+    super.didPopNext();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    context.read<SparepartBloc>().add(GetAllSparepartsEvent());
+    super.initState();
   }
 
   @override
@@ -49,14 +68,10 @@ class _ProdukListScreenState extends State<ProdukListScreen> {
                 });
               },
               decoration: InputDecoration(
-                hintText: 'Cari produk...',
+                hintText: 'Cari item...',
                 prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.grey[100],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
                 ),
               ),
             ),
@@ -148,7 +163,7 @@ class _ProdukListScreenState extends State<ProdukListScreen> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
-                                        'Rp ${item.hargaJual}',
+                                        formatIDR(double.parse(item.hargaJual)),
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
