@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:frontend/cores/utils/injection.dart';
+import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/domain/usecases/authentication_usecase.dart';
 import 'package:frontend/features/authentication/presentations/bloc/event/authentication_event.dart';
 import 'package:frontend/features/authentication/presentations/bloc/state/authentication_state.dart';
@@ -20,12 +22,12 @@ class AuthenticationBloc
 
     final result =
         await authenticationUsecaseImpl.callLogin(event.email, event.password);
-
-    result.fold(
-      (error) => emit(AuthenticationLoginError(failure: error)),
-      (data) =>
-          emit(AuthenticationLoginSuccess(authenticationModelLogin: data)),
-    );
+    final session = locator<Session>();
+    result.fold((error) => emit(AuthenticationLoginError(failure: error)),
+        (data) {
+      session.setIdUser = data.user.id;
+      emit(AuthenticationLoginSuccess(authenticationModelLogin: data));
+    });
   }
 
   Future<void> _onRegister(
@@ -35,11 +37,10 @@ class AuthenticationBloc
     final result = await authenticationUsecaseImpl.callRegister(
         event.name, event.email, event.password, event.cPassword);
 
-    result.fold(
-      (error) => emit(AuthenticationRegisterError(failure: error)),
-      (data) => emit(
-          AuthenticationRegisterSuccess(authenticationModelRegister: data)),
-    );
+    result.fold((error) => emit(AuthenticationRegisterError(failure: error)),
+        (data) {
+      emit(AuthenticationRegisterSuccess(authenticationModelRegister: data));
+    });
   }
 
   Future<void> _onLogout(

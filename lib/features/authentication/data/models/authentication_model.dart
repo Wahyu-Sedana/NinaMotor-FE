@@ -21,24 +21,30 @@ class AuthenticationModel {
       message: json['message'] ?? "",
       user: (json['user'] is Map)
           ? User.fromJson(json['user'])
-          : User(name: "", email: "", password: ""),
+          : User(id: "", name: "", email: "", password: ""),
     );
   }
 }
 
 class User {
+  final String id;
   final String name;
   final String email;
   final String password;
 
-  User({required this.name, required this.email, required this.password});
+  User(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.password});
 
   Map<String, String> toJson() {
-    return {'nama': name, 'email': email, 'password': password};
+    return {'id': id, 'nama': name, 'email': email, 'password': password};
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+        id: json['id'] ?? "",
         name: json['nama'] ?? "",
         email: json['email'] ?? "",
         password: json['password'] ?? "");

@@ -41,6 +41,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _namaController.dispose();
     _emailController.dispose();
     _alamatController.dispose();
+    _noKendaraanController.dispose();
+    _namaKendaraanController.dispose();
     super.dispose();
   }
 

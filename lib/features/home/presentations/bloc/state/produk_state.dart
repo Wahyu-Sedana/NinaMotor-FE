@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:frontend/cores/errors/failure.dart';
+import 'package:frontend/features/home/data/models/cart_model.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 
 abstract class SparepartState extends Equatable {
@@ -24,6 +25,27 @@ class SparepartError extends SparepartState {
   final Failure failure;
 
   SparepartError({required this.failure});
+
+  @override
+  List<Object?> get props => [failure];
+}
+
+// Tambahan untuk Cart
+class CartLoading extends SparepartState {}
+
+class CartSuccess extends SparepartState {
+  final CartResponse data;
+
+  CartSuccess({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
+class CartFailure extends SparepartState {
+  final Failure failure;
+
+  CartFailure({required this.failure});
 
   @override
   List<Object?> get props => [failure];

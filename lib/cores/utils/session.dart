@@ -5,7 +5,7 @@ abstract class Session {
   set setToken(String token);
   set setUsername(String username);
   set setEmail(String email);
-  set setIdUser(int userId);
+  set setIdUser(String userId);
   String get getToken;
   String get getUsername;
   String get getEmail;
@@ -36,8 +36,8 @@ class SessionImpl implements Session {
   }
 
   @override
-  set setIdUser(int userId) {
-    pref.setInt("USER_ID", userId);
+  set setIdUser(String userId) {
+    pref.setString("USER_ID", userId);
   }
 
   @override

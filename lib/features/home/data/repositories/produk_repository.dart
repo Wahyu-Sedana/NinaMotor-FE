@@ -1,11 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/features/home/data/datasources/produk_datasource.dart';
+import 'package:frontend/features/home/data/models/cart_model.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 
 import '../../../../cores/errors/failure.dart';
 
 abstract class SparepartRepository {
   Future<Either<Failure, List<SparepartModel>>> getSparepartList();
+  Future<Either<Failure, CartResponse>> addToCart({
+    required String sparepartId,
+    required int quantity,
+  });
+  Future<Either<Failure, CartResponse>> getItemCart();
 }
 
 class SparepartRepositoryImpl implements SparepartRepository {
@@ -17,6 +23,32 @@ class SparepartRepositoryImpl implements SparepartRepository {
   Future<Either<Failure, List<SparepartModel>>> getSparepartList() async {
     try {
       final result = await sparepartDatasource.getSparepartList();
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CartResponse>> addToCart({
+    required String sparepartId,
+    required int quantity,
+  }) async {
+    try {
+      final result = await sparepartDatasource.addToCart(
+        sparepartId: sparepartId,
+        quantity: quantity,
+      );
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CartResponse>> getItemCart() async {
+    try {
+      final result = await sparepartDatasource.getItemCart();
       return Right(result);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));

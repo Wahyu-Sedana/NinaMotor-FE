@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/cores/utils/colors.dart';
+import 'package:frontend/features/home/presentations/screens/cart_tab.dart';
 import 'package:frontend/features/home/presentations/screens/home_tab.dart';
 import 'package:frontend/features/profile/presentations/screens/profile_tab.dart';
 
@@ -13,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 2;
 
   final _pages = [
-    const Center(child: Text("Cart")),
+    const CartTab(),
     const Center(child: Text("Bookmark")),
     const HomeTab(),
     const Center(child: Text("Service Motor")),
