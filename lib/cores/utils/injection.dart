@@ -11,6 +11,10 @@ import 'package:frontend/features/profile/data/datasources/profile_datasource.da
 import 'package:frontend/features/profile/data/repositories/profile_repository.dart';
 import 'package:frontend/features/profile/domain/usecases/profile_usecase.dart';
 import 'package:frontend/features/profile/presentations/bloc/profile_bloc.dart';
+import 'package:frontend/features/servismotor/data/datasources/service_motor_datasource.dart';
+import 'package:frontend/features/servismotor/data/repositories/service_motor_repository.dart';
+import 'package:frontend/features/servismotor/domain/usecases/service_motor_usecase.dart';
+import 'package:frontend/features/servismotor/presentations/bloc/service_motor_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,6 +50,9 @@ Future<void> locatorInit() async {
   locator.registerFactory<ProfileBloc>(
     () => ProfileBloc(profileUsecaseImpl: locator()),
   );
+  locator.registerFactory<MotorServiceBloc>(
+    () => MotorServiceBloc(usecase: locator()),
+  );
 
   // DataSource
   locator.registerLazySingleton<AuthenticationDatasource>(
@@ -56,6 +63,9 @@ Future<void> locatorInit() async {
       () => SparepartDataSourceImpl(dio: locator<Dio>()));
   locator.registerLazySingleton<ProfileDatasource>(
     () => ProfileDatasourceImpl(dio: locator<Dio>()),
+  );
+  locator.registerLazySingleton<ServiceDatasource>(
+    () => ServiceDatasourceImpl(dio: locator<Dio>()),
   );
 
   // UseCase
@@ -69,6 +79,9 @@ Future<void> locatorInit() async {
   );
   locator.registerLazySingleton<ProfileUsecaseImpl>(
     () => ProfileUsecaseImpl(repository: locator()),
+  );
+  locator.registerLazySingleton<ServisMotorUsecaseImpl>(
+    () => ServisMotorUsecaseImpl(repository: locator()),
   );
 
   // Repository
@@ -85,5 +98,8 @@ Future<void> locatorInit() async {
   );
   locator.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(datasource: locator()),
+  );
+  locator.registerLazySingleton<ServiceRepository>(
+    () => ServiceRepositoryImpl(datasource: locator()),
   );
 }

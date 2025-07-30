@@ -1,0 +1,1 @@
+enum JenisMotor { matic, manual }

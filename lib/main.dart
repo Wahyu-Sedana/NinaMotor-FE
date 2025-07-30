@@ -9,6 +9,7 @@ import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
 import 'package:frontend/features/profile/presentations/bloc/profile_bloc.dart';
 import 'package:frontend/features/routes/route.dart';
+import 'package:frontend/features/servismotor/presentations/bloc/service_motor_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +46,9 @@ class MainApp extends StatelessWidget {
             ),
           ),
           BlocProvider(
-              create: (context) => ProfileBloc(profileUsecaseImpl: locator()))
+              create: (context) => ProfileBloc(profileUsecaseImpl: locator())),
+          BlocProvider(
+              create: (context) => MotorServiceBloc(usecase: locator()))
         ],
         child: MaterialApp(
           navigatorObservers: [routeObserver],

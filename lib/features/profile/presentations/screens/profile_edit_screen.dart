@@ -19,7 +19,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   late TextEditingController _namaController;
   late TextEditingController _emailController;
   late TextEditingController _alamatController;
-  // late TextEditingController _noKendaraanController;
+  late TextEditingController _noTelpController;
   // late TextEditingController _namaKendaraanController;
   File? _imageFile;
 
@@ -30,9 +30,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _emailController = TextEditingController(text: widget.profile.email);
     _alamatController =
         TextEditingController(text: widget.profile.alamat ?? '');
-    // _noKendaraanController =
-    //     TextEditingController(text: widget.profile.noKendaraan ?? '');
-    // _namaKendaraanController =
+    _noTelpController =
+        TextEditingController(text: widget.profile.noTelp ?? '');
+  // _namaKendaraanController =
     //     TextEditingController(text: widget.profile.namaKendaraan ?? '');
   }
 
@@ -64,8 +64,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         role: widget.profile.role,
         emailVerifiedAt: widget.profile.emailVerifiedAt,
         alamat: _alamatController.text,
-        noKendaraan: widget.profile.noKendaraan,
-        namaKendaraan: widget.profile.namaKendaraan,
+        noTelp: widget.profile.noTelp,
         profile: widget.profile.profile,
         createdAt: widget.profile.createdAt,
         updatedAt: widget.profile.updatedAt,
@@ -150,6 +149,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               buildTextField(
                 controller: _alamatController,
                 label: 'Alamat',
+              ),
+              const SizedBox(height: 16),
+              buildTextField(
+                controller: _noTelpController,
+                label: 'No Telp',
               ),
               // const SizedBox(height: 16),
               // buildTextField(
