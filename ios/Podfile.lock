@@ -2,6 +2,15 @@ PODS:
   - Flutter (1.0.0)
   - image_picker_ios (0.0.1):
     - Flutter
+  - midtrans_sdk (0.4.0):
+    - Flutter
+    - MidtransKit (= 1.20.1)
+  - MidtransCoreKit (1.20.1)
+  - MidtransKit (1.20.1):
+    - MidtransCoreKit (= 1.20.1)
+    - MidtransKit/UI (= 1.20.1)
+  - MidtransKit/UI (1.20.1):
+    - MidtransCoreKit (= 1.20.1)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -9,19 +18,30 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - midtrans_sdk (from `.symlinks/plugins/midtrans_sdk/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+
+SPEC REPOS:
+  trunk:
+    - MidtransCoreKit
+    - MidtransKit
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  midtrans_sdk:
+    :path: ".symlinks/plugins/midtrans_sdk/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
+  midtrans_sdk: 8e4094d0d1585b5a7a66266f738603c17cef274f
+  MidtransCoreKit: 2503bd419c78445c59360b81afc2733dee226c8c
+  MidtransKit: f230a539a9b57bd314a91d78044ceee95fb76751
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796

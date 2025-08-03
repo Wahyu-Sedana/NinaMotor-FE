@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/home/data/datasources/produk_datasource.dart';
 import 'package:frontend/features/home/data/models/bookmark_model.dart';
 import 'package:frontend/features/home/data/models/cart_model.dart';
@@ -20,6 +21,8 @@ abstract class SparepartRepository {
     required String sparepartId,
   });
   Future<Either<Failure, BookmarkResponseModel>> getBookmark();
+  Future<Either<Failure, List<SparepartModel>>> getSparepartByKategori(
+      String namaKategori);
 }
 
 class SparepartRepositoryImpl implements SparepartRepository {
@@ -93,6 +96,19 @@ class SparepartRepositoryImpl implements SparepartRepository {
       final result = await sparepartDatasource.getBookmark();
       return Right(result);
     } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<SparepartModel>>> getSparepartByKategori(
+      String namaKategori) async {
+    try {
+      final result =
+          await sparepartDatasource.getSparepartByKategori(namaKategori);
+      return Right(result);
+    } catch (e) {
+      logger(e);
       return Left(ServerFailure(message: e.toString()));
     }
   }

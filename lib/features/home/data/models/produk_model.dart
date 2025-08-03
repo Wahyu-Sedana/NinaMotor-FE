@@ -26,7 +26,7 @@ class SparepartModel {
   factory SparepartModel.fromJson(Map<String, dynamic> json) {
     return SparepartModel(
       kodeSparepart: json['kode_sparepart'] ?? '',
-      nama: json['nama'] ?? '',
+      nama: json['nama_sparepart'] ?? '',
       deskripsi: json['deskripsi'],
       stok: json['stok'] ?? 0,
       hargaBeli: json['harga_beli'] ?? 0,
@@ -42,7 +42,7 @@ class SparepartModel {
   Map<String, dynamic> toJson() {
     return {
       'kode_sparepart': kodeSparepart,
-      'nama': nama,
+      'nama_sparepart': nama,
       'deskripsi': deskripsi,
       'stok': stok,
       'harga_beli': hargaBeli,

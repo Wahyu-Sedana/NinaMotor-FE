@@ -10,7 +10,7 @@ abstract class Session {
   String get getUsername;
   String get getEmail;
 
-  int get getIdUser;
+  String get getIdUser;
 
   Future<void> clearSession();
 }
@@ -50,7 +50,7 @@ class SessionImpl implements Session {
   String get getEmail => pref.getString(EMAIL) ?? "";
 
   @override
-  int get getIdUser => pref.getInt("USER_ID") ?? 0;
+  String get getIdUser => pref.getString("USER_ID") ?? "";
 
   @override
   Future<void> clearSession() async {

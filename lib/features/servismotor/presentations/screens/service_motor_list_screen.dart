@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/cores/utils/extension.dart';
 import 'package:frontend/features/servismotor/data/models/service_motor_model.dart';
 
 class ServiceDetailScreen extends StatelessWidget {
@@ -9,39 +10,79 @@ class ServiceDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Detail Pengajuan')),
-      body: Padding(
+      backgroundColor: const Color(0xFFF5F5F5),
+      appBar: AppBar(
+        title: const Text('Detail Pengajuan'),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        elevation: 1,
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          elevation: 4,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('No Kendaraan: ${serviceData.noKendaraan}',
-                    style: const TextStyle(fontSize: 16)),
-                const SizedBox(height: 8),
-                Text('Jenis Motor: ${serviceData.jenisMotor}'),
-                const SizedBox(height: 8),
-                Text('Keluhan: ${serviceData.keluhan}'),
-                const SizedBox(height: 8),
-                Text(
-                  'Status: ${serviceData.status}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: serviceData.status == 'Pending'
-                        ? Colors.orange
-                        : Colors.green,
-                  ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 4,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
                 ),
-              ],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildItem("No Kendaraan", serviceData.noKendaraan),
+                    const Divider(height: 24),
+                    _buildItem("Jenis Motor", serviceData.jenisMotor.label),
+                    const Divider(height: 24),
+                    _buildItem("Keluhan", serviceData.keluhan),
+                    const Divider(height: 24),
+                    _buildItem(
+                      "Status",
+                      serviceData.status,
+                      valueColor: serviceData.status == 'Pending'
+                          ? Colors.orange
+                          : Colors.green,
+                      isBold: true,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildItem(String title, String value,
+      {bool isBold = false, Color? valueColor}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            color: valueColor ?? Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 }

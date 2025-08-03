@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/event/produk_event.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/state/produk_state.dart';
+import 'package:frontend/cores/utils/colors.dart';
 
 class BookmarkTab extends StatefulWidget {
   const BookmarkTab({super.key});
@@ -23,29 +24,27 @@ class _BookmarkTabState extends State<BookmarkTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Bookmark')),
-        body: SafeArea(
-            child: Column(
+      appBar: AppBar(title: const Text('Bookmark')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           children: [
             // Search Bar
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search bookmarked items...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Cari item bookmark...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    searchQuery = value;
-                  });
-                },
               ),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+              },
             ),
+            const SizedBox(height: 16),
 
             // List Bookmark
             Expanded(
@@ -62,40 +61,90 @@ class _BookmarkTabState extends State<BookmarkTab> {
                     }).toList();
 
                     if (bookmarks.isEmpty) {
-                      return const Center(child: Text('No bookmarks found.'));
+                      return const Center(child: Text('Bookmark kosong.'));
                     }
 
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(16),
+                    return ListView.separated(
                       itemCount: bookmarks.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final bookmark = bookmarks[index];
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 3,
-                          child: ListTile(
-                            leading: Image.network(
-                              'http://127.0.0.1:8000/storage/${bookmark.sparepart.gambarProduk}',
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) =>
-                                  const Icon(Icons.image_not_supported),
+                        final imageUrl =
+                            'http://127.0.0.1:8000/storage/${bookmark.sparepart.gambarProduk}';
+
+                        return InkWell(
+                          onTap: () {
+                            // Optional: tambahkan navigasi ke detail jika perlu
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                             ),
-                            title: Text(bookmark.sparepart.nama),
-                            subtitle: Text('Kode: ${bookmark.sparepartId}'),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete_outline),
-                              onPressed: () {
-                                // context.read<SparepartBloc>().add(
-                                //       RemoveFromBookmarkEvent(
-                                //         sparepartId: bookmark.sparepartId,
-                                //       ),
-                                //     );
-                              },
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                children: [
+                                  // Gambar
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      imageUrl,
+                                      width: 60,
+                                      height: 60,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => const Icon(
+                                          Icons.image_not_supported,
+                                          size: 60),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+
+                                  // Info
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          bookmark.sparepart.nama,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Kode: ${bookmark.sparepartId}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  // Hapus Bookmark
+                                  IconButton(
+                                    icon: const Icon(Icons.delete_outline,
+                                        color: redColor),
+                                    onPressed: () {
+                                      // Tambahkan logika penghapusan
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -105,7 +154,7 @@ class _BookmarkTabState extends State<BookmarkTab> {
 
                   if (state is BookmarkFailure) {
                     return Center(
-                        child: Text('Failed: ${state.failure.message}'));
+                        child: Text('Gagal memuat: ${state.failure.message}'));
                   }
 
                   return const SizedBox();
@@ -113,6 +162,8 @@ class _BookmarkTabState extends State<BookmarkTab> {
               ),
             ),
           ],
-        )));
+        ),
+      ),
+    );
   }
 }

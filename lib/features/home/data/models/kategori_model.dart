@@ -12,7 +12,7 @@ class KategoriModel {
   factory KategoriModel.fromJson(Map<String, dynamic> json) {
     return KategoriModel(
       id: json['id'],
-      nama: json['nama'] ?? '',
+      nama: json['nama_kategori'] ?? '',
       deskripsi: json['deskripsi'],
     );
   }
@@ -20,7 +20,7 @@ class KategoriModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'nama': nama,
+      'nama_kategori': nama,
       'deskripsi': deskripsi,
     };
   }

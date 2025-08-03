@@ -4,6 +4,7 @@ class CartItem {
   final String nama;
   final String hargaJual;
   final String gambar;
+  final int subtotal;
 
   CartItem({
     required this.sparepartId,
@@ -11,15 +12,17 @@ class CartItem {
     required this.nama,
     required this.hargaJual,
     required this.gambar,
+    required this.subtotal,
   });
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
       sparepartId: json['sparepart_id'] ?? "",
       quantity: json['quantity'] ?? 0,
-      nama: json['nama'] ?? "",
+      nama: json['nama_sparepart'] ?? "",
       hargaJual: json['harga_jual'] ?? "",
       gambar: json['gambar'] ?? "",
+      subtotal: json['subtotal'] ?? 0,
     );
   }
 
@@ -27,9 +30,10 @@ class CartItem {
     return {
       'sparepart_id': sparepartId,
       'quantity': quantity,
-      'nama': nama,
+      'nama_sparepart': nama,
       'harga_jual': hargaJual,
       'gambar': gambar,
+      'subtotal': subtotal,
     };
   }
 }
@@ -39,6 +43,7 @@ class CartModel {
   final String? userId;
   final String? sessionToken;
   final List<CartItem> items;
+  final int total;
   final String createdAt;
   final String updatedAt;
 
@@ -47,6 +52,7 @@ class CartModel {
     this.userId,
     this.sessionToken,
     required this.items,
+    required this.total,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -65,6 +71,7 @@ class CartModel {
       userId: json['user_id']?.toString(),
       sessionToken: json['session_token']?.toString(),
       items: parsedItems,
+      total: json['total'] ?? 0,
       createdAt: json['created_at']?.toString() ?? "",
       updatedAt: json['updated_at']?.toString() ?? "",
     );

@@ -26,6 +26,8 @@ class AuthenticationBloc
     result.fold((error) => emit(AuthenticationLoginError(failure: error)),
         (data) {
       session.setIdUser = data.user.id;
+      session.setEmail = data.user.email;
+      session.setUsername = data.user.name;
       emit(AuthenticationLoginSuccess(authenticationModelLogin: data));
     });
   }

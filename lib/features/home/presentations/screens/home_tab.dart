@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/utils/colors.dart';
@@ -23,9 +22,17 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> with RouteAware {
+  String? selectedKategori;
+
   @override
   void didPopNext() {
-    context.read<SparepartBloc>().add(GetAllSparepartsEvent());
+    if (selectedKategori != null) {
+      context
+          .read<SparepartBloc>()
+          .add(GetSparepartByKategoriEvent(namaKategori: selectedKategori!));
+    } else {
+      context.read<SparepartBloc>().add(GetAllSparepartsEvent());
+    }
     super.didPopNext();
   }
 
@@ -48,20 +55,22 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
     super.initState();
   }
 
+  void _onKategoriSelected(String namaKategori) {
+    setState(() {
+      selectedKategori = selectedKategori == namaKategori ? null : namaKategori;
+    });
+
+    if (selectedKategori != null) {
+      context
+          .read<SparepartBloc>()
+          .add(GetSparepartByKategoriEvent(namaKategori: selectedKategori!));
+    } else {
+      context.read<SparepartBloc>().add(GetAllSparepartsEvent());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<String> imageUrls = [
-      'https://images.unsplash.com/photo-1693566325736-dfa8479ad15f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      'https://plus.unsplash.com/premium_photo-1661960643553-ccfbf7d921f6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      'https://images.unsplash.com/photo-1622079445502-e4283ec3acfe?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    ];
-
-    final List<String> promos = [
-      "Servis Motor Cepat & Terpercaya di Nina Motor",
-      "Diskon Sparepart hingga 30%! Cuma di Nina Motor",
-      "Ganti Oli Gratis Cek Mesin – Kunjungi Nina Motor Sekarang!",
-    ];
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -89,82 +98,48 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 20,
+            const SizedBox(height: 20),
+
+            // Search Field
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Cari item...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onChanged: (_) {
+                // Optional: implement local search filter
+              },
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(height: 24),
+
+            // Kategori Section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextField(
-                  // controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Cari item...',
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onChanged: (_) {
-                    // Optional: implement local search filter
-                  },
-                ),
-                const SizedBox(height: 16),
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 160,
-                    autoPlay: true,
-                    enlargeCenterPage: true,
-                    viewportFraction: 0.9,
-                    aspectRatio: 16 / 9,
-                  ),
-                  items: List.generate(imageUrls.length, (index) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.network(
-                            imageUrls[index],
-                            fit: BoxFit.cover,
-                          ),
-                          Container(
-                            color: Colors.black.withValues(alpha: 0.4),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(
-                                promos[index],
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black54,
-                                      blurRadius: 4,
-                                      offset: Offset(0, 2),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  }),
-                ),
-                const SizedBox(height: 24),
                 const Text(
                   "Kategori Produk",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteService.listProdukRoute);
+                  },
+                  child: const Text(
+                    "Lihat Semua",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 16),
+
             BlocBuilder<KategoriBloc, KategoriState>(
               builder: (context, state) {
                 if (state is KategoriLoading) {
@@ -189,17 +164,31 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
                       itemBuilder: (_, index) {
                         final KategoriModel kategori =
                             state.kategoriList[index];
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.red,
-                          ),
-                          child: Text(
-                            kategori.nama,
-                            style: TextStyle(
-                                color: white, fontWeight: FontWeight.bold),
+                        final isSelected = selectedKategori == kategori.nama;
+
+                        return GestureDetector(
+                          onTap: () => _onKategoriSelected(kategori.nama),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: isSelected
+                                  ? Colors.red
+                                  : Colors.grey.shade200,
+                              border: isSelected
+                                  ? Border.all(color: Colors.red, width: 2)
+                                  : null,
+                            ),
+                            child: Text(
+                              kategori.nama,
+                              style: TextStyle(
+                                color: isSelected ? white : Colors.black87,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.w500,
+                              ),
+                            ),
                           ),
                         );
                       },
@@ -211,29 +200,22 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
               },
             ),
             const SizedBox(height: 24),
+
+            // Produk Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Produk Terbaru",
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, RouteService.listProdukRoute);
-                  },
-                  child: const Text(
-                    "Lihat selengkapnya",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
+                Text(
+                  selectedKategori != null
+                      ? "Produk $selectedKategori"
+                      : "Semua Produk",
+                  style: const TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             const SizedBox(height: 16),
+
             BlocBuilder<SparepartBloc, SparepartState>(
               builder: (context, state) {
                 if (state is SparepartLoading) {
@@ -251,6 +233,32 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
                     itemBuilder: (_, index) => shimmerProduk(),
                   );
                 } else if (state is SparepartLoaded) {
+                  if (state.spareparts.isEmpty) {
+                    return Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.inventory_2_outlined,
+                              size: 64, color: Colors.grey.shade400),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Tidak ada produk ditemukan",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -385,8 +393,17 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
                           ),
                         );
                       });
+                } else if (state is SparepartError) {
+                  return Center(
+                    child: const Text(
+                      "Tidak ada produk ditemukan",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
                 } else {
-                  return const Text("Gagal memuat produk");
+                  return SizedBox();
                 }
               },
             )

@@ -60,7 +60,6 @@ class _ServiceMotorTabState extends State<ServiceMotorTab> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Search Box
             TextField(
               onChanged: (value) {
                 setState(() {
@@ -76,8 +75,6 @@ class _ServiceMotorTabState extends State<ServiceMotorTab> {
               ),
             ),
             const SizedBox(height: 16),
-
-            // List with Bloc
             Expanded(
               child: BlocBuilder<MotorServiceBloc, MotorServiceState>(
                 builder: (context, state) {

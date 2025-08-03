@@ -19,6 +19,7 @@ abstract class SparepartDatasource {
     required String sparepartId,
   });
   Future<BookmarkResponseModel> getBookmark();
+  Future<List<SparepartModel>> getSparepartByKategori(String namaKategori);
 }
 
 class SparepartDataSourceImpl implements SparepartDatasource {
@@ -148,6 +149,33 @@ class SparepartDataSourceImpl implements SparepartDatasource {
     } on DioException catch (e) {
       logger(e.message ?? e.toString(), label: "Get Data Bookmark Error");
       throw Exception("Gagal mengambil data bookmark");
+    }
+  }
+
+  @override
+  Future<List<SparepartModel>> getSparepartByKategori(
+      String namaKategori) async {
+    final String url = '${baseURL}sparepart/kategori';
+    final session = locator<Session>();
+
+    try {
+      final response = await dio.post(
+        url,
+        data: {'nama_kategori': namaKategori},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${session.getToken}',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      final List data = response.data['data'];
+      return data.map((e) => SparepartModel.fromJson(e)).toList();
+    } on DioException catch (e) {
+      logger(e.message ?? e.toString(),
+          label: "Get Sparepart By Kategori Error");
+      throw Exception("Gagal mengambil sparepart berdasarkan kategori");
     }
   }
 }

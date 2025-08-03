@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
+import 'package:frontend/cores/utils/midtrans_helper.dart';
 import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/presentations/bloc/authentication_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await locatorInit();
   await locator.isReady<Session>();
+  await MidtransHelper.initSDK();
   try {
     runApp(const MainApp());
   } catch (e) {

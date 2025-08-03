@@ -35,6 +35,15 @@ class AddToItemBookmarkEvent extends SparepartEvent {
   List<Object?> get props => [sparepartId];
 }
 
+class GetSparepartByKategoriEvent extends SparepartEvent {
+  final String namaKategori;
+  GetSparepartByKategoriEvent({
+    required this.namaKategori,
+  });
+  @override
+  List<Object?> get props => [namaKategori];
+}
+
 class GetItemCartEvent extends SparepartEvent {}
 
 class GetItemBookmarkEvent extends SparepartEvent {}
