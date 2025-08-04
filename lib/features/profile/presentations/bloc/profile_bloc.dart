@@ -23,29 +23,4 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       (data) => emit(ProfileLoadSuccess(profile: data.user)),
     );
   }
-
-  // Future<void> _onUpdateProfile(
-  //     UpdateProfileEvent event, Emitter<ProfileState> emit) async {
-  //   emit(ProfileLoading());
-
-  //   final result =
-  //       await profileUsecaseImpl.callUpdateProfile(event.name, event.email);
-
-  //   result.fold(
-  //     (error) => emit(ProfileError(failure: error)),
-  //     (data) => emit(ProfileUpdateSuccess(message: data.message)),
-  //   );
-  // }
-
-  // Future<void> _onUploadPhoto(
-  //     UploadProfilePhotoEvent event, Emitter<ProfileState> emit) async {
-  //   emit(ProfileLoading());
-
-  //   final result = await profileUsecaseImpl.callUploadProfilePhoto(event.image);
-
-  //   result.fold(
-  //     (error) => emit(ProfileError(failure: error)),
-  //     (data) => emit(ProfileUploadPhotoSuccess(imageUrl: data.imageUrl)),
-  //   );
-  // }
 }

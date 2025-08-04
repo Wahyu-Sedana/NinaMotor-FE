@@ -7,6 +7,10 @@ import 'package:frontend/features/home/domain/usecases/kategori_usecase.dart';
 import 'package:frontend/features/home/domain/usecases/produk_usecase.dart';
 import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
+import 'package:frontend/features/pembayaran/data/datasources/checkout_datasource.dart';
+import 'package:frontend/features/pembayaran/data/repositories/checkout_repository.dart';
+import 'package:frontend/features/pembayaran/domain/usecases/checkout_usecase.dart';
+import 'package:frontend/features/pembayaran/presentations/bloc/checkout_bloc.dart';
 import 'package:frontend/features/profile/data/datasources/profile_datasource.dart';
 import 'package:frontend/features/profile/data/repositories/profile_repository.dart';
 import 'package:frontend/features/profile/domain/usecases/profile_usecase.dart';
@@ -53,6 +57,9 @@ Future<void> locatorInit() async {
   locator.registerFactory<MotorServiceBloc>(
     () => MotorServiceBloc(usecase: locator()),
   );
+  locator.registerFactory<CheckoutBloc>(
+    () => CheckoutBloc(transactionUsecaseImpl: locator()),
+  );
 
   // DataSource
   locator.registerLazySingleton<AuthenticationDatasource>(
@@ -66,6 +73,9 @@ Future<void> locatorInit() async {
   );
   locator.registerLazySingleton<ServiceDatasource>(
     () => ServiceDatasourceImpl(dio: locator<Dio>()),
+  );
+  locator.registerLazySingleton<CheckoutDatasource>(
+    () => CheckoutDatasourceImpl(dio: locator<Dio>()),
   );
 
   // UseCase
@@ -82,6 +92,9 @@ Future<void> locatorInit() async {
   );
   locator.registerLazySingleton<ServisMotorUsecaseImpl>(
     () => ServisMotorUsecaseImpl(repository: locator()),
+  );
+  locator.registerLazySingleton<TransactionUsecaseImpl>(
+    () => TransactionUsecaseImpl(repository: locator()),
   );
 
   // Repository
@@ -101,5 +114,8 @@ Future<void> locatorInit() async {
   );
   locator.registerLazySingleton<ServiceRepository>(
     () => ServiceRepositoryImpl(datasource: locator()),
+  );
+  locator.registerLazySingleton<TransactionRepository>(
+    () => TransactionRepositoryImpl(datasource: locator()),
   );
 }

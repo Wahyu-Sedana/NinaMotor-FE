@@ -1,3 +1,4 @@
+import 'package:frontend/cores/utils/helper.dart';
 import 'package:midtrans_sdk/midtrans_sdk.dart';
 
 class MidtransHelper {
@@ -16,7 +17,7 @@ class MidtransHelper {
       ),
     );
     _midtrans!.setTransactionFinishedCallback((result) {
-      print('Midtrans result: ${result.toJson()}');
+      logger('Midtrans result: ${result.toJson()}');
     });
   }
 

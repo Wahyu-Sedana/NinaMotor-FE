@@ -8,6 +8,7 @@ import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/presentations/bloc/authentication_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
+import 'package:frontend/features/pembayaran/presentations/bloc/checkout_bloc.dart';
 import 'package:frontend/features/profile/presentations/bloc/profile_bloc.dart';
 import 'package:frontend/features/routes/route.dart';
 import 'package:frontend/features/servismotor/presentations/bloc/service_motor_bloc.dart';
@@ -50,7 +51,10 @@ class MainApp extends StatelessWidget {
           BlocProvider(
               create: (context) => ProfileBloc(profileUsecaseImpl: locator())),
           BlocProvider(
-              create: (context) => MotorServiceBloc(usecase: locator()))
+              create: (context) => MotorServiceBloc(usecase: locator())),
+          BlocProvider(
+              create: (context) =>
+                  CheckoutBloc(transactionUsecaseImpl: locator()))
         ],
         child: MaterialApp(
           navigatorObservers: [routeObserver],

@@ -117,7 +117,10 @@ class ProfileTab extends StatelessWidget {
                             buildProfileItem(
                               icon: Icons.shopping_bag,
                               label: "History Transaksi",
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(context,
+                                    RouteService.historyPembyaranRoute);
+                              },
                             ),
                             const SizedBox(height: 30),
                             ElevatedButton.icon(
