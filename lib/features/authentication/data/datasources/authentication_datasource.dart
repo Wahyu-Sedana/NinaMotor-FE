@@ -6,7 +6,8 @@ import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/data/models/authentication_model.dart';
 
 abstract class AuthenticationDatasource {
-  Future<AuthenticationModel> userLogin(String email, String password);
+  Future<AuthenticationModel> userLogin(
+      String email, String password, String fcmToken);
   Future<AuthenticationModelLogout> userLogout();
   Future<AuthenticationModel> userRegister(
       String name, String email, String password, String cPassword);
@@ -17,11 +18,12 @@ class AuthenticationDataSourceImpl implements AuthenticationDatasource {
   AuthenticationDataSourceImpl({required this.dio});
 
   @override
-  Future<AuthenticationModel> userLogin(String email, String password) async {
+  Future<AuthenticationModel> userLogin(
+      String email, String password, String fcmToken) async {
     final String url = '${baseURL}login';
     try {
-      final response =
-          await dio.post(url, data: {'email': email, 'password': password});
+      final response = await dio.post(url,
+          data: {'email': email, 'password': password, 'fcm_token': fcmToken});
 
       return AuthenticationModel.fromJson(response.data);
     } on DioException catch (e) {

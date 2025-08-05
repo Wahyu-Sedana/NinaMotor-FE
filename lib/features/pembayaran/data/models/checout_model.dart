@@ -4,7 +4,6 @@ class Transaction {
   final DateTime tanggalTransaksi;
   final String total;
   final String statusPembayaran;
-  final String statusTransaksi;
   final String metodePembayaran;
   final String? alamat;
   final String? snapToken;
@@ -16,7 +15,6 @@ class Transaction {
     required this.tanggalTransaksi,
     required this.total,
     required this.statusPembayaran,
-    required this.statusTransaksi,
     required this.metodePembayaran,
     this.alamat,
     this.snapToken,
@@ -32,7 +30,6 @@ class Transaction {
           : DateTime.now(),
       total: json['total'] ?? "",
       statusPembayaran: json['status_pembayaran'] ?? "",
-      statusTransaksi: json['status_transaksi'] ?? "",
       metodePembayaran: json['metode_pembayaran'] ?? "",
       alamat: json['alamat'],
       snapToken: json['snap_token'],

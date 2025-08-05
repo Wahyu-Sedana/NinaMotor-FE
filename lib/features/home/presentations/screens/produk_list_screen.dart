@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
@@ -140,7 +141,7 @@ class _ProdukListScreenState extends State<ProdukListScreen> with RouteAware {
                                     ),
                                     child: item.gambarProduk.isNotEmpty
                                         ? Image.network(
-                                            'http://127.0.0.1:8000/storage/${item.gambarProduk}',
+                                            '$baseURLImage${item.gambarProduk}',
                                             height: 140,
                                             width: double.infinity,
                                             fit: BoxFit.cover,

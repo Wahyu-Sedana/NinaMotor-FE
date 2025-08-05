@@ -8,8 +8,10 @@ abstract class AuthenticationEvent extends Equatable {
 class LoginEvent extends AuthenticationEvent {
   final String email;
   final String password;
+  final String fcmToken;
 
-  LoginEvent({required this.email, required this.password});
+  LoginEvent(
+      {required this.email, required this.password, required this.fcmToken});
 
   @override
   List<Object?> get props => [email, password];

@@ -5,7 +5,7 @@ import 'package:frontend/features/authentication/data/repositories/authenticatio
 
 abstract class AuthenticationUsecase {
   Future<Either<Failure, AuthenticationModel>> callLogin(
-      String email, String password);
+      String email, String password, String fcmToken);
   Future<Either<Failure, AuthenticationModelLogout>> callLogout();
   Future<Either<Failure, AuthenticationModel>> callRegister(
       String name, String email, String password, String cPassword);
@@ -18,8 +18,8 @@ class AuthenticationUsecaseImpl implements AuthenticationUsecase {
 
   @override
   Future<Either<Failure, AuthenticationModel>> callLogin(
-      String email, String password) {
-    return authenticationRepository.userLogin(email, password);
+      String email, String password, String fcmToken) {
+    return authenticationRepository.userLogin(email, password, fcmToken);
   }
 
   @override

@@ -20,8 +20,8 @@ class AuthenticationBloc
       LoginEvent event, Emitter<AuthenticationState> emit) async {
     emit(AuthenticationLoginLoading());
 
-    final result =
-        await authenticationUsecaseImpl.callLogin(event.email, event.password);
+    final result = await authenticationUsecaseImpl.callLogin(
+        event.email, event.password, event.fcmToken);
     final session = locator<Session>();
     result.fold((error) => emit(AuthenticationLoginError(failure: error)),
         (data) {

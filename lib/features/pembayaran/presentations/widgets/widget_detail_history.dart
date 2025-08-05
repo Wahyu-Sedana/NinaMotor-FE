@@ -81,8 +81,6 @@ void showTransactionDetail({
             buildDetailRow("Status Pembayaran",
                 transaction.statusPembayaran.toUpperCase()),
             buildDetailRow(
-                "Status Transaksi", transaction.statusTransaksi.toUpperCase()),
-            buildDetailRow(
               "Metode Pembayaran",
               getPaymentMethodDisplay(
                   transaction.metodePembayaran, transaction.midtransData),

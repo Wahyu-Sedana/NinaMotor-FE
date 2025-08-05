@@ -5,7 +5,7 @@ import 'package:frontend/features/authentication/data/models/authentication_mode
 
 abstract class AuthenticationRepository {
   Future<Either<Failure, AuthenticationModel>> userLogin(
-      String email, String password);
+      String email, String password, String fcmToken);
   Future<Either<Failure, AuthenticationModelLogout>> userLogout();
   Future<Either<Failure, AuthenticationModel>> userRegister(
       String name, String email, String password, String cPassword);
@@ -18,10 +18,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<Either<Failure, AuthenticationModel>> userLogin(
-      String email, String password) async {
+      String email, String password, String fcmToken) async {
     try {
       final authenticationModelLogin =
-          await authenticationDatasource.userLogin(email, password);
+          await authenticationDatasource.userLogin(email, password, fcmToken);
       if (authenticationModelLogin.status == 404) {
         return Left(ServerFailure(
             code: 404, message: authenticationModelLogin.message));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
@@ -130,7 +131,7 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(24),
                       child: Image.network(
-                        'http://127.0.0.1:8000/storage/${sparepart.gambarProduk}',
+                        '$baseURLImage${sparepart.gambarProduk}',
                         height: 200,
                         width: double.infinity,
                         fit: BoxFit.cover,

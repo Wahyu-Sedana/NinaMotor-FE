@@ -76,7 +76,6 @@ IconData getStatusIcon(String status) {
       return Icons.check_circle;
     case 'pending':
       return Icons.access_time;
-    case 'gagal':
     case 'expired':
     case 'cancel':
     case 'deny':

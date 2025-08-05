@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/features/home/presentations/bloc/event/produk_event.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/state/produk_state.dart';
@@ -70,7 +71,7 @@ class _BookmarkTabState extends State<BookmarkTab> {
                       itemBuilder: (context, index) {
                         final bookmark = bookmarks[index];
                         final imageUrl =
-                            'http://127.0.0.1:8000/storage/${bookmark.sparepart.gambarProduk}';
+                            '$baseURLImage${bookmark.sparepart.gambarProduk}';
 
                         return InkWell(
                           onTap: () {

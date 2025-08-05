@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/utils/injection.dart';
@@ -18,14 +19,20 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void _onLoginPressed() {
+  void _onLoginPressed() async {
     final email = emailController.text;
     final password = passwordController.text;
+    final token = await FirebaseMessaging.instance.getToken();
 
-    context.read<AuthenticationBloc>().add(LoginEvent(
-          email: email,
-          password: password,
-        ));
+    if (token != null) {
+      context.read<AuthenticationBloc>().add(
+            LoginEvent(email: email, password: password, fcmToken: token),
+          );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal mendapatkan FCM token')),
+      );
+    }
   }
 
   @override

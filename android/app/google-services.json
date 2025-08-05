@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "900477324465",
+    "project_id": "nina-motor",
+    "storage_bucket": "nina-motor.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900477324465:android:4dcf2c7717e2805d90a690",
+        "android_client_info": {
+          "package_name": "com.ninamotor.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-9eVR_rX-s0Vje4_zllwGJFxh48fg9Ns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

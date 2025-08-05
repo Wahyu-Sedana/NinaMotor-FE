@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/utils/firebase_options.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/cores/utils/midtrans_helper.dart';
+import 'package:frontend/cores/utils/notification_helper.dart';
 import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/presentations/bloc/authentication_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
@@ -16,9 +19,25 @@ import 'package:frontend/features/servismotor/presentations/bloc/service_motor_b
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  try {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    logger("Firebase initialized successfully", label: "firebase");
+  } catch (e) {
+    logger("Failed to initialize Firebase: ${e.toString()}",
+        label: "firebase_error");
+  }
   await locatorInit();
   await locator.isReady<Session>();
   await MidtransHelper.initSDK();
+  try {
+    await NotificationHelper().init();
+    logger("Notification helper initialized successfully",
+        label: "notification");
+  } catch (e) {
+    logger("Failed to initialize notification helper: ${e.toString()}",
+        label: "notification_error");
+  }
   try {
     runApp(const MainApp());
   } catch (e) {

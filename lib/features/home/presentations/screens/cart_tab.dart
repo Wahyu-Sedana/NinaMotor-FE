@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/features/home/presentations/bloc/event/produk_event.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/state/produk_state.dart';
@@ -117,7 +118,7 @@ class _CartTabState extends State<CartTab> {
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           child: Image.network(
-                                            'http://127.0.0.1:8000/storage/${cart.gambar}',
+                                            '$baseURLImage${cart.gambar}',
                                             width: 48,
                                             height: 48,
                                             fit: BoxFit.cover,
