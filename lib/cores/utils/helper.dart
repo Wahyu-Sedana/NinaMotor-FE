@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/features/pembayaran/data/models/checout_model.dart';
+import 'package:frontend/features/pembayaran/data/models/checkout_model.dart';
 import 'package:intl/intl.dart';
 
 void logger(dynamic value, {String? label}) {
@@ -49,24 +49,48 @@ String formatDateIndonesia(DateTime date) {
   return '$day $month $year, $hour:$minute';
 }
 
-String getPaymentMethodDisplay(String method, MidtransData? midtransData) {
-  if (midtransData?.paymentType != null) {
-    switch (midtransData!.paymentType!.toLowerCase()) {
-      case 'bank_transfer':
-        return 'Transfer Bank${midtransData.bank != null ? ' (${midtransData.bank!.toUpperCase()})' : ''}';
-      case 'gopay':
-        return 'GoPay';
-      case 'shopeepay':
-        return 'ShopeePay';
-      case 'qris':
-        return 'QRIS';
-      case 'credit_card':
-        return 'Kartu Kredit';
-      default:
-        return midtransData.paymentType!.replaceAll('_', ' ').toUpperCase();
-    }
+String getPaymentMethodDisplay(
+    String metodePembayaran, PaymentInfo? paymentInfo) {
+  if (paymentInfo?.paymentType != null) {
+    return _formatPaymentType(paymentInfo!.paymentType!);
   }
-  return method.toUpperCase();
+
+  if (metodePembayaran == 'pending') {
+    return 'Belum Dipilih';
+  }
+
+  return _formatPaymentType(metodePembayaran);
+}
+
+String _formatPaymentType(String paymentType) {
+  switch (paymentType.toLowerCase()) {
+    case 'bank_transfer':
+      return 'Transfer Bank';
+    case 'credit_card':
+      return 'Kartu Kredit';
+    case 'gopay':
+      return 'GoPay';
+    case 'shopeepay':
+      return 'ShopeePay';
+    case 'qris':
+      return 'QRIS';
+    case 'echannel':
+      return 'Mandiri Bill';
+    case 'bca_va':
+      return 'BCA Virtual Account';
+    case 'bni_va':
+      return 'BNI Virtual Account';
+    case 'bri_va':
+      return 'BRI Virtual Account';
+    case 'mandiri_va':
+      return 'Mandiri Virtual Account';
+    case 'other_va':
+      return 'Virtual Account';
+    case 'pending':
+      return 'Belum Dipilih';
+    default:
+      return paymentType.replaceAll('_', ' ').toUpperCase();
+  }
 }
 
 IconData getStatusIcon(String status) {
@@ -82,5 +106,26 @@ IconData getStatusIcon(String status) {
       return Icons.cancel;
     default:
       return Icons.help;
+  }
+}
+
+int _getTotalItemsCount(Transaction transaction) {
+  if (transaction.cartItems == null) return 0;
+  return transaction.cartItems!
+      .fold<int>(0, (sum, item) => sum + (item.quantity));
+}
+
+String getItemsPreview(Transaction transaction) {
+  if (transaction.cartItems == null || transaction.cartItems!.isEmpty) {
+    return 'Tidak ada item';
+  }
+
+  if (transaction.cartItems!.length == 1) {
+    final item = transaction.cartItems!.first;
+    return '${item.nama} (${item.quantity}x)';
+  } else {
+    final firstItem = transaction.cartItems!.first;
+    final totalItems = _getTotalItemsCount(transaction);
+    return '${firstItem.nama} dan ${transaction.cartItems!.length - 1} item lainnya ($totalItems total)';
   }
 }

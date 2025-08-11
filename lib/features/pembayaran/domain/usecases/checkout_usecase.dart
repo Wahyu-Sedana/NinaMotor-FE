@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/cores/errors/failure.dart';
-import 'package:frontend/features/pembayaran/data/models/checout_model.dart';
+import 'package:frontend/features/pembayaran/data/models/checkout_model.dart';
 import 'package:frontend/features/pembayaran/data/repositories/checkout_repository.dart';
 
 abstract class TransactionUsecase {

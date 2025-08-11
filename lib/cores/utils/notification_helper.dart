@@ -9,7 +9,7 @@ class NotificationHelper {
     _instance = this;
   }
 
-  factory NotificationHelper() => _instance ?? NotificationHelper._internal();
+factory NotificationHelper() => _instance ?? NotificationHelper._internal();
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/cores/utils/session.dart';
-import 'package:frontend/features/pembayaran/data/models/checout_model.dart';
+import 'package:frontend/features/pembayaran/data/models/checkout_model.dart';
 
 abstract class CheckoutDatasource {
   Future<List<Transaction>> getTransactions({

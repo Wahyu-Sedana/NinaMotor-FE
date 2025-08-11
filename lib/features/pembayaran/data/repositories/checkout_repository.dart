@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/cores/errors/failure.dart';
 import 'package:frontend/features/pembayaran/data/datasources/checkout_datasource.dart';
-import 'package:frontend/features/pembayaran/data/models/checout_model.dart';
+import 'package:frontend/features/pembayaran/data/models/checkout_model.dart';
 
 abstract class TransactionRepository {
   Future<Either<Failure, List<Transaction>>> getTransactions({

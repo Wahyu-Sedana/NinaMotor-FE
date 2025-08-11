@@ -1,4 +1,4 @@
-package com.ninamotor.app
+package com.ninamotor.dev
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -4,7 +4,7 @@ import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/cores/utils/session.dart';
-import 'package:frontend/features/pembayaran/data/models/checout_model.dart';
+import 'package:frontend/features/pembayaran/data/models/checkout_model.dart';
 import 'package:frontend/features/pembayaran/presentations/bloc/checkout_bloc.dart';
 import 'package:frontend/features/pembayaran/presentations/bloc/event/checkout_event.dart';
 import 'package:frontend/features/pembayaran/presentations/bloc/state/checkout_state.dart';
@@ -126,6 +126,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
               const PopupMenuItem(value: 'pending', child: Text('Pending')),
               const PopupMenuItem(value: 'berhasil', child: Text('Berhasil')),
               const PopupMenuItem(value: 'expired', child: Text('Expired')),
+              const PopupMenuItem(value: 'gagal', child: Text('Gagal')),
             ],
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -224,8 +225,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                 ),
               );
             }
-
-            // Show empty state only after successful load with no data
             if (transactions.isEmpty && state is CheckoutLoaded) {
               return RefreshIndicator(
                 onRefresh: _refreshTransactions,
@@ -277,6 +276,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         }
 
                         final transaction = transactions[index];
+                        final isPending =
+                            transaction.statusPembayaran.toLowerCase() ==
+                                'pending';
+
                         return Card(
                           margin: const EdgeInsets.only(bottom: 12),
                           shape: RoundedRectangleBorder(
@@ -349,6 +352,24 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                   const SizedBox(height: 8),
                                   Row(
                                     children: [
+                                      Icon(Icons.shopping_bag,
+                                          size: 14, color: Colors.grey[600]),
+                                      const SizedBox(width: 4),
+                                      Expanded(
+                                        child: Text(
+                                          getItemsPreview(transaction),
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
                                       Icon(Icons.calendar_today,
                                           size: 14, color: Colors.grey[600]),
                                       const SizedBox(width: 4),
@@ -371,7 +392,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                       Text(
                                         getPaymentMethodDisplay(
                                           transaction.metodePembayaran,
-                                          transaction.midtransData,
+                                          transaction.paymentInfo,
                                         ),
                                         style: TextStyle(
                                           color: Colors.grey[600],
@@ -380,7 +401,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                       ),
                                     ],
                                   ),
-                                  if (transaction.midtransData?.vaNumber !=
+                                  if (transaction.paymentInstruction !=
                                       null) ...[
                                     const SizedBox(height: 4),
                                     Row(
@@ -389,7 +410,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                             size: 14, color: Colors.grey[600]),
                                         const SizedBox(width: 4),
                                         Text(
-                                          'VA: ${transaction.midtransData!.vaNumber}',
+                                          '${transaction.paymentInstruction!.bank} VA: ${transaction.paymentInstruction!.vaNumber}',
                                           style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 12,

@@ -74,6 +74,19 @@ class _CartTabState extends State<CartTab> {
 
                       final allCartItems = carts.data!.items;
 
+                      final selectedItems = allCartItems
+                          .where((item) =>
+                              _selectedCartIds.contains(item.sparepartId))
+                          .toList();
+
+                      final subtotal = selectedItems.fold<int>(
+                        0,
+                        (sum, item) =>
+                            sum +
+                            (double.parse(item.hargaJual.toString()).toInt() *
+                                int.parse(item.quantity.toString())),
+                      );
+
                       return Column(
                         children: [
                           Expanded(
@@ -232,7 +245,7 @@ class _CartTabState extends State<CartTab> {
                                               builder: (context) =>
                                                   CheckoutScreen(
                                                 cartItems: selectedItems,
-                                                total: carts.data!.total,
+                                                total: subtotal,
                                               ),
                                             ),
                                           );
