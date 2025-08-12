@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/cores/utils/colors.dart';
+import 'package:frontend/cores/utils/enum.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/cores/utils/midtrans_helper.dart';
 import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/home/data/models/cart_model.dart';
-
-enum PaymentMethod { transfer, cash }
 
 class CheckoutScreen extends StatefulWidget {
   final List<CartItem> cartItems;
@@ -23,7 +22,7 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _isLoading = false;
-  PaymentMethod _selectedPaymentMethod = PaymentMethod.transfer;
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.bank_transfer;
 
   Future<void> bayarSekarang(
     BuildContext context,
@@ -73,7 +72,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     List<CartItem> selectedItems,
     int total,
   ) async {
-    await _processRegularPayment(context, selectedItems, total, 'midtrans');
+    await _processRegularPayment(
+        context, selectedItems, total, 'bank_transfer');
   }
 
   Future<void> _processRegularPayment(
@@ -314,7 +314,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
           SizedBox(height: 12),
           _buildPaymentMethodTile(
-            PaymentMethod.transfer,
+            PaymentMethod.bank_transfer,
             'Transfer Bank',
             'Bayar menggunakan transfer bank',
             Icons.account_balance,

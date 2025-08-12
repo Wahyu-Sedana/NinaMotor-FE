@@ -1,3 +1,3 @@
 enum JenisMotor { matic, manual }
 
-enum PaymentMethod { transfer, cash }
+enum PaymentMethod { bank_transfer, cash }
