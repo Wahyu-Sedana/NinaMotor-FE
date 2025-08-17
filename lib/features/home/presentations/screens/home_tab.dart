@@ -101,7 +101,6 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
             ),
             const SizedBox(height: 20),
 
-            // Search Field
             TextField(
               decoration: InputDecoration(
                 hintText: 'Cari item...',
@@ -110,9 +109,7 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onChanged: (_) {
-                // Optional: implement local search filter
-              },
+              onChanged: (_) {},
             ),
             const SizedBox(height: 24),
 

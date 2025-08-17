@@ -17,12 +17,19 @@ class ServiceMotorTab extends StatefulWidget {
   State<ServiceMotorTab> createState() => _ServiceMotorTabState();
 }
 
-class _ServiceMotorTabState extends State<ServiceMotorTab> {
+class _ServiceMotorTabState extends State<ServiceMotorTab> with RouteAware {
   String searchKeyword = '';
+
+  @override
+  void didPopNext() {
+    context.read<MotorServiceBloc>().add(GetMotorServiceEvent());
+    super.didPopNext();
+  }
+
   @override
   void initState() {
-    super.initState();
     context.read<MotorServiceBloc>().add(GetMotorServiceEvent());
+    super.initState();
   }
 
   void _navigateToForm() async {
