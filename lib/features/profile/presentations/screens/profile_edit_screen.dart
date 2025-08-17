@@ -20,7 +20,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   late TextEditingController _emailController;
   late TextEditingController _alamatController;
   late TextEditingController _noTelpController;
-  // late TextEditingController _namaKendaraanController;
   File? _imageFile;
 
   @override
@@ -32,8 +31,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         TextEditingController(text: widget.profile.alamat ?? '');
     _noTelpController =
         TextEditingController(text: widget.profile.noTelp ?? '');
-  // _namaKendaraanController =
-    //     TextEditingController(text: widget.profile.namaKendaraan ?? '');
   }
 
   @override
@@ -41,8 +38,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _namaController.dispose();
     _emailController.dispose();
     _alamatController.dispose();
-    // _noKendaraanController.dispose();
-    // _namaKendaraanController.dispose();
     super.dispose();
   }
 

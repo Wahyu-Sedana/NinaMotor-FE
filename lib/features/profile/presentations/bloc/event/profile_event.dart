@@ -9,16 +9,18 @@ abstract class ProfileEvent extends Equatable {
 class GetProfileEvent extends ProfileEvent {}
 
 class UpdateProfileEvent extends ProfileEvent {
-  final String name;
-  final String email;
+  final String nama;
+  final String alamat;
+  final String noTelp;
 
   UpdateProfileEvent({
-    required this.name,
-    required this.email,
+    required this.nama,
+    required this.alamat,
+    required this.noTelp,
   });
 
   @override
-  List<Object> get props => [name, email];
+  List<Object> get props => [nama, alamat, noTelp];
 }
 
 class UploadProfilePhotoEvent extends ProfileEvent {

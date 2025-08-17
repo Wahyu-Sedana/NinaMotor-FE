@@ -109,11 +109,11 @@ class ProfileTab extends StatelessWidget {
                                 );
                               },
                             ),
-                            buildProfileItem(
-                              icon: Icons.build,
-                              label: "History Service",
-                              onTap: () {},
-                            ),
+                            // buildProfileItem(
+                            //   icon: Icons.build,
+                            //   label: "History Service",
+                            //   onTap: () {},
+                            // ),
                             buildProfileItem(
                               icon: Icons.shopping_bag,
                               label: "History Transaksi",
@@ -154,7 +154,7 @@ class ProfileTab extends StatelessWidget {
                   return Center(child: Text(state.failure.message));
                 }
 
-                return const SizedBox(); // default
+                return const SizedBox();
               },
             ),
           ),

@@ -8,8 +8,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc({required this.profileUsecaseImpl}) : super(ProfileInitial()) {
     on<GetProfileEvent>(_onGetProfile);
-    // on<UpdateProfileEvent>(_onUpdateProfile);
-    // on<UploadProfilePhotoEvent>(_onUploadPhoto);
+    on<UpdateProfileEvent>(_onUpdateProfile);
   }
 
   Future<void> _onGetProfile(
@@ -17,6 +16,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(ProfileLoading());
 
     final result = await profileUsecaseImpl.callProfile();
+
+    result.fold(
+      (error) => emit(ProfileError(failure: error)),
+      (data) => emit(ProfileLoadSuccess(profile: data.user)),
+    );
+  }
+
+  Future<void> _onUpdateProfile(
+      UpdateProfileEvent event, Emitter<ProfileState> emit) async {
+    emit(ProfileLoading());
+
+    final result = await profileUsecaseImpl.callUpdateProfile(
+        event.nama, event.alamat, event.noTelp);
 
     result.fold(
       (error) => emit(ProfileError(failure: error)),

@@ -276,9 +276,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         }
 
                         final transaction = transactions[index];
-                        final isPending =
-                            transaction.statusPembayaran.toLowerCase() ==
-                                'pending';
+                        // final isPending =
+                        //     transaction.statusPembayaran.toLowerCase() ==
+                        //         'pending';
 
                         return Card(
                           margin: const EdgeInsets.only(bottom: 12),
