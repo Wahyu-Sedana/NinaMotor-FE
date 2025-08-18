@@ -23,6 +23,9 @@ abstract class SparepartRepository {
   Future<Either<Failure, BookmarkResponseModel>> getBookmark();
   Future<Either<Failure, List<SparepartModel>>> getSparepartByKategori(
       String namaKategori);
+  Future<Either<Failure, BookmarkResponseModel>> removeBookmark({
+    required String sparepartId,
+  });
 }
 
 class SparepartRepositoryImpl implements SparepartRepository {
@@ -109,6 +112,18 @@ class SparepartRepositoryImpl implements SparepartRepository {
       return Right(result);
     } catch (e) {
       logger(e);
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, BookmarkResponseModel>> removeBookmark(
+      {required String sparepartId}) async {
+    try {
+      final result = await sparepartDatasource.removeBookmarkCart(
+          sparepartId: sparepartId);
+      return Right(result);
+    } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
   }

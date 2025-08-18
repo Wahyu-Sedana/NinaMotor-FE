@@ -6,7 +6,7 @@ import 'package:frontend/features/profile/data/repositories/profile_repository.d
 abstract class ProfileUsecase {
   Future<Either<Failure, ProfileResponse>> callProfile();
   Future<Either<Failure, ProfileResponse>> callUpdateProfile(
-      String nama, String alamat, String noTelp);
+      String nama, String alamat, String noTelp, String imageProfile);
 }
 
 class ProfileUsecaseImpl implements ProfileUsecase {
@@ -20,7 +20,7 @@ class ProfileUsecaseImpl implements ProfileUsecase {
 
   @override
   Future<Either<Failure, ProfileResponse>> callUpdateProfile(
-      String nama, String alamat, String noTelp) {
-    return repository.updateProfile(nama, alamat, noTelp);
+      String nama, String alamat, String noTelp, String imageProfile) {
+    return repository.updateProfile(nama, alamat, noTelp, imageProfile);
   }
 }

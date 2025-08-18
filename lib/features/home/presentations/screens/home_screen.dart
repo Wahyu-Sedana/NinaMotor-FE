@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/features/home/presentations/screens/bookmark_tab.dart';
 import 'package:frontend/features/home/presentations/screens/cart_tab.dart';
 import 'package:frontend/features/home/presentations/screens/home_tab.dart';
@@ -13,12 +12,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 2;
+  int _currentIndex = 0;
 
   final _pages = [
+    const HomeTab(),
     const CartTab(),
     const BookmarkTab(),
-    const HomeTab(),
     const ServiceMotorTab(),
     const ProfileTab(),
   ];
@@ -29,58 +28,101 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _onFabTapped() {
-    setState(() {
-      _currentIndex = 2;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onFabTapped,
-        backgroundColor: Colors.red,
-        shape: const CircleBorder(),
-        child: const Icon(
-          Icons.home,
-          size: 30,
-          color: white,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
-        child: SizedBox(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildTabItem(icon: Icons.shopping_cart, index: 0, label: 'Cart'),
-              _buildTabItem(icon: Icons.bookmark, index: 1, label: 'Bookmark'),
-              const SizedBox(width: 20),
-              _buildTabItem(icon: Icons.motorcycle, index: 3, label: 'Service'),
-              _buildTabItem(icon: Icons.person, index: 4, label: 'Profile'),
-            ],
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildTabItem(
+                  icon: Icons.home_rounded,
+                  index: 0,
+                  label: 'Home',
+                ),
+                _buildTabItem(
+                  icon: Icons.shopping_cart_rounded,
+                  index: 1,
+                  label: 'Cart',
+                ),
+                _buildTabItem(
+                  icon: Icons.bookmark_rounded,
+                  index: 2,
+                  label: 'Bookmark',
+                ),
+                _buildTabItem(
+                  icon: Icons.motorcycle_rounded,
+                  index: 3,
+                  label: 'Service',
+                ),
+                _buildTabItem(
+                  icon: Icons.person_rounded,
+                  index: 4,
+                  label: 'Profile',
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTabItem(
-      {required IconData icon, required int index, required String label}) {
+  Widget _buildTabItem({
+    required IconData icon,
+    required int index,
+    required String label,
+  }) {
     final isSelected = _currentIndex == index;
     return GestureDetector(
       onTap: () => _onTabTapped(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: isSelected ? Colors.red : Colors.grey),
-        ],
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.red.withValues(alpha: 0.1)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                icon,
+                color: isSelected ? Colors.red : Colors.grey[600],
+                size: isSelected ? 26 : 24,
+              ),
+            ),
+            const SizedBox(height: 4),
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 200),
+              style: TextStyle(
+                fontSize: isSelected ? 12 : 11,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected ? Colors.red : Colors.grey[600],
+              ),
+              child: isSelected ? Text(label) : SizedBox(),
+            ),
+          ],
+        ),
       ),
     );
   }

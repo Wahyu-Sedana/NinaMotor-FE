@@ -56,9 +56,7 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
               SnackBar(content: Text("Gagal: ${state.failure.message}")),
             );
           } else if (state is BookmarkSuccess) {
-            setState(() {
-              isBookmarked = true;
-            });
+            context.read<SparepartBloc>().add(GetItemBookmarkEvent());
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Bookmark berhasil diupdate')),
             );
@@ -68,7 +66,6 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
             setState(() {
               isBookmarked =
                   bookmarkedIds.contains(widget.sparepart.kodeSparepart);
-              isBookmarked = true;
             });
           } else if (state is BookmarkFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -100,13 +97,12 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
                           AddToItemBookmarkEvent(
                               sparepartId: sparepart.kodeSparepart),
                         );
+                  } else {
+                    context.read<SparepartBloc>().add(
+                          RemoveFromBookmarkEvent(
+                              sparepartId: sparepart.kodeSparepart),
+                        );
                   }
-                  // else {
-                  //   context.read<SparepartBloc>().add(
-                  //         RemoveFromBookmarkEvent(
-                  //             sparepartId: sparepart.kodeSparepart),
-                  //       );
-                  // }
                 },
               )
             ],

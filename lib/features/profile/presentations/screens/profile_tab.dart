@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
@@ -71,7 +72,7 @@ class ProfileTab extends StatelessWidget {
                       CircleAvatar(
                         radius: 100,
                         backgroundImage: profile.profile != null
-                            ? NetworkImage(profile.profile!)
+                            ? NetworkImage("${baseURLImage}${profile.profile}")
                             : null,
                         child: profile.profile == null
                             ? const Icon(
@@ -102,9 +103,7 @@ class ProfileTab extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ProfileEditScreen(
-                                      profile: profile,
-                                    ),
+                                    builder: (context) => ProfileEditScreen(),
                                   ),
                                 );
                               },

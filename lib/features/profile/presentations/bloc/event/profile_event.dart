@@ -12,11 +12,13 @@ class UpdateProfileEvent extends ProfileEvent {
   final String nama;
   final String alamat;
   final String noTelp;
+  final String? imageProfile;
 
   UpdateProfileEvent({
     required this.nama,
     required this.alamat,
     required this.noTelp,
+    required this.imageProfile,
   });
 
   @override

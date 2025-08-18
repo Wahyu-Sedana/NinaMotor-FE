@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +19,7 @@ import 'package:frontend/features/profile/presentations/bloc/profile_bloc.dart';
 import 'package:frontend/features/routes/route.dart';
 import 'package:frontend/features/servismotor/presentations/bloc/service_motor_bloc.dart';
 
+Future<void> onBackgroundMessageHandler(RemoteMessage message) async {}
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -26,6 +30,11 @@ Future<void> main() async {
   } catch (e) {
     logger("Failed to initialize Firebase: ${e.toString()}",
         label: "firebase_error");
+  }
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true, badge: true, sound: true);
+  if (Platform.isAndroid || Platform.isIOS) {
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessageHandler);
   }
   await locatorInit();
   await locator.isReady<Session>();

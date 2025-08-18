@@ -73,79 +73,100 @@ class _BookmarkTabState extends State<BookmarkTab> {
                         final imageUrl =
                             '$baseURLImage${bookmark.sparepart.gambarProduk}';
 
-                        return InkWell(
-                          onTap: () {
-                            // Optional: tambahkan navigasi ke detail jika perlu
-                          },
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Row(
+                              children: [
+                                // Gambar
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    imageUrl,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => const Icon(
+                                        Icons.image_not_supported,
+                                        size: 60),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+
+                                // Info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        bookmark.sparepart.nama,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Kode: ${bookmark.sparepartId}',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline,
+                                      color: redColor),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) {
+                                        return AlertDialog(
+                                          title: Text(
+                                              'Hapus ${bookmark.sparepart.nama}?'),
+                                          content: const Text(
+                                              'Apakah Anda yakin ingin menghapus item ini?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                context
+                                                    .read<SparepartBloc>()
+                                                    .add(RemoveFromBookmarkEvent(
+                                                        sparepartId: bookmark
+                                                            .sparepartId));
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Hapus'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text('Batal'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                children: [
-                                  // Gambar
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      imageUrl,
-                                      width: 60,
-                                      height: 60,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) => const Icon(
-                                          Icons.image_not_supported,
-                                          size: 60),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-
-                                  // Info
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          bookmark.sparepart.nama,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Kode: ${bookmark.sparepartId}',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  // Hapus Bookmark
-                                  IconButton(
-                                    icon: const Icon(Icons.delete_outline,
-                                        color: redColor),
-                                    onPressed: () {
-                                      // Tambahkan logika penghapusan
-                                    },
-                                  ),
-                                ],
-                              ),
                             ),
                           ),
                         );

@@ -1,8 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/helper.dart';
+import 'package:frontend/cores/utils/strings.dart';
 import 'package:frontend/features/home/data/models/kategori_model.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/presentations/bloc/event/kategori_event.dart';
@@ -24,6 +26,31 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> with RouteAware {
   String? selectedKategori;
+  PageController _pageController = PageController();
+  int _currentPage = 0;
+  int _notifCount = 0;
+  List<String> _messages = [];
+
+  final List<String> _sliderImages = [
+    imageSlide1,
+    imageSlide2,
+    imageSlide3,
+  ];
+
+  final List<Map<String, String>> _sliderTexts = [
+    {
+      'title': 'Ayo Beli Sparepart',
+      'subtitle': 'di Nina Motor dengan Harga Murah'
+    },
+    {
+      'title': 'Ayo Service Motor',
+      'subtitle': 'Dapatkan pelayanan terbaik untuk kendaraan Anda'
+    },
+    {
+      'title': 'Gunakan Aplikasi Nina Motor',
+      'subtitle': 'untuk membantu layanan Anda'
+    },
+  ];
 
   @override
   void didPopNext() {
@@ -45,6 +72,7 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
 
   @override
   void dispose() {
+    _pageController.dispose();
     routeObserver.unsubscribe(this);
     super.dispose();
   }
@@ -53,7 +81,29 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
   void initState() {
     context.read<KategoriBloc>().add(GetAllKategoriEvent());
     context.read<SparepartBloc>().add(GetAllSparepartsEvent());
+
+    Future.delayed(const Duration(seconds: 3), _autoSlide);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      setState(() {
+        _notifCount++;
+        _messages.add(message.notification?.body ?? "Pesan baru");
+      });
+    });
     super.initState();
+  }
+
+  void _autoSlide() {
+    if (mounted) {
+      setState(() {
+        _currentPage = (_currentPage + 1) % _sliderImages.length;
+      });
+      _pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      Future.delayed(const Duration(seconds: 3), _autoSlide);
+    }
   }
 
   void _onKategoriSelected(String namaKategori) {
@@ -68,6 +118,135 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
     } else {
       context.read<SparepartBloc>().add(GetAllSparepartsEvent());
     }
+  }
+
+  Widget _buildImageSlider() {
+    return Container(
+      height: 160,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            onPageChanged: (int page) {
+              setState(() {
+                _currentPage = page;
+              });
+            },
+            itemCount: _sliderImages.length,
+            itemBuilder: (context, index) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.asset(
+                        _sliderImages[index],
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.red.shade400,
+                                  Colors.red.shade600,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.black.withValues(alpha: 0.6),
+                            Colors.black.withValues(alpha: 0.3),
+                            Colors.transparent,
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 16,
+                      right: 16,
+                      bottom: 20,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _sliderTexts[index]['title']!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(1, 1),
+                                  blurRadius: 3,
+                                  color: Colors.black54,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _sliderTexts[index]['subtitle']!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(1, 1),
+                                  blurRadius: 3,
+                                  color: Colors.black54,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _sliderImages.asMap().entries.map((entry) {
+                return Container(
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _currentPage == entry.key
+                        ? Colors.white
+                        : Colors.white.withValues(alpha: 0.5),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -87,33 +266,122 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.notifications_none, color: Colors.red),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                          insetPadding:
+                              const EdgeInsets.only(top: 60, right: 16),
+                          alignment: Alignment.topRight,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxHeight: 400,
+                              maxWidth: 300,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: _messages.isEmpty
+                                      ? const Padding(
+                                          padding: EdgeInsets.all(16),
+                                          child: Text("Tidak ada notifikasi"),
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: _messages.length,
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              leading: const Icon(
+                                                  Icons.notifications),
+                                              title: Text(_messages[index]),
+                                            );
+                                          },
+                                        ),
+                                ),
+                                _messages.isNotEmpty
+                                    ? Container(
+                                        padding: const EdgeInsets.all(8),
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                            minimumSize:
+                                                const Size(double.infinity, 45),
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _messages.clear();
+                                              _notifCount = 0;
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            "Tandai semua telah dibaca",
+                                            style: TextStyle(color: white),
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox()
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Stack(
+                    children: [
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 2,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child:
+                              Icon(Icons.notifications_none, color: Colors.red),
+                        ),
+                      ),
+                      if (_notifCount > 0)
+                        Positioned(
+                          right: 4,
+                          top: 4,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 20,
+                              minHeight: 20,
+                            ),
+                            child: Text(
+                              '$_notifCount',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
 
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Cari item...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onChanged: (_) {},
-            ),
+            _buildImageSlider(),
             const SizedBox(height: 24),
 
-            // Kategori Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

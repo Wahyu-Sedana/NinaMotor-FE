@@ -7,7 +7,7 @@ import 'package:frontend/features/profile/data/models/profile_model.dart';
 abstract class ProfileDatasource {
   Future<ProfileResponse> getProfile();
   Future<ProfileResponse> updateProfile(
-      String nama, String alamat, String noTelp);
+      String nama, String alamat, String noTelp, String imageProfile);
 }
 
 class ProfileDatasourceImpl implements ProfileDatasource {
@@ -34,19 +34,27 @@ class ProfileDatasourceImpl implements ProfileDatasource {
 
   @override
   Future<ProfileResponse> updateProfile(
-      String nama, String alamat, String noTelp) async {
-    final path = '${baseURL}profile';
+      String nama, String alamat, String noTelp, String imageProfile) async {
+    final path = '${baseURL}profile/update';
     final session = locator<Session>();
     try {
+      final formData = FormData.fromMap({
+        "nama": nama,
+        "alamat": alamat,
+        "no_telp": noTelp,
+        if (imageProfile.isNotEmpty)
+          "profile": await MultipartFile.fromFile(
+            imageProfile,
+            filename: imageProfile.split('/').last,
+          ),
+      });
+
       final response = await dio.post(path,
-          data: {
-            "nama": nama,
-            "alamat": alamat,
-            "noTelp": noTelp,
-          },
+          data: formData,
           options: Options(
             headers: {
               'Authorization': 'Bearer ${session.getToken}',
+              'Content-Type': 'multipart/form-data',
             },
           ));
       return ProfileResponse.fromJson(response.data);

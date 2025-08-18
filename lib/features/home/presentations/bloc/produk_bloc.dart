@@ -16,6 +16,7 @@ class SparepartBloc extends Bloc<SparepartEvent, SparepartState> {
     on<AddToItemBookmarkEvent>(_onItemBookmark);
     on<GetItemBookmarkEvent>(_onGetItemBookmark);
     on<GetSparepartByKategoriEvent>(_onGetSparepartByKategori);
+    on<RemoveFromBookmarkEvent>(_onRemoveBookmark);
   }
 
   Future<void> _onGetAllSpareparts(
@@ -133,5 +134,20 @@ class SparepartBloc extends Bloc<SparepartEvent, SparepartState> {
         await Future.delayed(Duration(milliseconds: 300));
       },
     );
+  }
+
+  Future<void> _onRemoveBookmark(
+      RemoveFromBookmarkEvent event, Emitter<SparepartState> emit) async {
+    emit(BookmarkLoading());
+    final result = await sparepartUsecaseImpl.removeBookmark(
+        sparepartId: event.sparepartId);
+    result.fold((failure) async {
+      logger(failure);
+      emit(BookmarkFailure(failure: failure));
+    }, (data) async {
+      emit(GetBookmarkListSuccess(bookmarks: data.data));
+      await Future.delayed(Duration(milliseconds: 300));
+      add(GetItemBookmarkEvent());
+    });
   }
 }

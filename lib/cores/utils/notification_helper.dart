@@ -9,7 +9,7 @@ class NotificationHelper {
     _instance = this;
   }
 
-factory NotificationHelper() => _instance ?? NotificationHelper._internal();
+  factory NotificationHelper() => _instance ?? NotificationHelper._internal();
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -49,6 +49,16 @@ factory NotificationHelper() => _instance ?? NotificationHelper._internal();
 
     final fcmToken = await FirebaseMessaging.instance.getToken();
     print('FCM Token: $fcmToken');
+
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   print("Pesan diterima (foreground): ${message.data}");
+    //   showNotifications(message);
+    // });
+
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   print("User klik notifikasi: ${message.data}");
+    //   showNotifications(message);
+    // });
   }
 
   final AndroidNotificationDetails _androidNotificationDetails =

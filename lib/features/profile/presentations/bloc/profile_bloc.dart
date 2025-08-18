@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/profile/domain/usecases/profile_usecase.dart';
 import 'package:frontend/features/profile/presentations/bloc/event/profile_event.dart';
 import 'package:frontend/features/profile/presentations/bloc/state/profile_state.dart';
@@ -19,7 +20,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     result.fold(
       (error) => emit(ProfileError(failure: error)),
-      (data) => emit(ProfileLoadSuccess(profile: data.user)),
+      (data) {
+        logger("hasil profile");
+        logger(data.user.noTelp);
+        emit(ProfileLoadSuccess(profile: data.user));
+      },
     );
   }
 
@@ -28,7 +33,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(ProfileLoading());
 
     final result = await profileUsecaseImpl.callUpdateProfile(
-        event.nama, event.alamat, event.noTelp);
+        event.nama, event.alamat, event.noTelp, event.imageProfile ?? "");
 
     result.fold(
       (error) => emit(ProfileError(failure: error)),

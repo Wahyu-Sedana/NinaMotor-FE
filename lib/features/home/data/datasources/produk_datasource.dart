@@ -20,6 +20,8 @@ abstract class SparepartDatasource {
   });
   Future<BookmarkResponseModel> getBookmark();
   Future<List<SparepartModel>> getSparepartByKategori(String namaKategori);
+  Future<BookmarkResponseModel> removeBookmarkCart(
+      {required String sparepartId});
 }
 
 class SparepartDataSourceImpl implements SparepartDatasource {
@@ -176,6 +178,25 @@ class SparepartDataSourceImpl implements SparepartDatasource {
       logger(e.message ?? e.toString(),
           label: "Get Sparepart By Kategori Error");
       throw Exception("Gagal mengambil sparepart berdasarkan kategori");
+    }
+  }
+
+  @override
+  Future<BookmarkResponseModel> removeBookmarkCart(
+      {required String sparepartId}) async {
+    final String url = '${baseURL}bookmark/remove';
+    final session = locator<Session>();
+
+    try {
+      final response = await dio.post(url,
+          data: {'sparepart_id': sparepartId},
+          options: Options(headers: {
+            'Authorization': 'Bearer ${session.getToken}',
+          }));
+      return BookmarkResponseModel.fromJson(response.data);
+    } on DioException catch (e) {
+      logger(e.message ?? e.toString(), label: "Remove Bookmark Error");
+      throw Exception("Gagal menghapus bookmark");
     }
   }
 }

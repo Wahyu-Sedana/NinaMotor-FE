@@ -50,9 +50,7 @@ class _CartTabState extends State<CartTab> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onChanged: (_) {
-                // Optional: implement local search filter
-              },
+              onChanged: (_) {},
             ),
             const SizedBox(height: 16),
             Expanded(

@@ -36,7 +36,6 @@ class AppInterceptor extends Interceptor {
     rootScaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
       ),
     );
 

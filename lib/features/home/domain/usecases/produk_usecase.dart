@@ -20,6 +20,10 @@ abstract class SparepartUsecase {
   Future<Either<Failure, BookmarkResponseModel>> getBookmark();
   Future<Either<Failure, List<SparepartModel>>> getSparepartByKategori(
       String namaKategori);
+
+  Future<Either<Failure, BookmarkResponseModel>> removeBookmark({
+    required String sparepartId,
+  });
 }
 
 class SparepartUsecaseImpl implements SparepartUsecase {
@@ -69,5 +73,11 @@ class SparepartUsecaseImpl implements SparepartUsecase {
   Future<Either<Failure, List<SparepartModel>>> getSparepartByKategori(
       String namaKategori) async {
     return repository.getSparepartByKategori(namaKategori);
+  }
+
+  @override
+  Future<Either<Failure, BookmarkResponseModel>> removeBookmark(
+      {required String sparepartId}) async {
+    return repository.removeBookmark(sparepartId: sparepartId);
   }
 }

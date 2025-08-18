@@ -51,7 +51,7 @@ class ProfileModel {
       emailVerifiedAt: json['email_verified_at'],
       role: json['role'] ?? '',
       alamat: json['alamat'] ?? '',
-      noTelp: json['noTelo'] ?? '',
+      noTelp: json['no_telp'] ?? '',
       profile: json['profile'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],

@@ -26,6 +26,15 @@ class RemoveFromCartEvent extends SparepartEvent {
   List<Object?> get props => [sparepartId];
 }
 
+class RemoveFromBookmarkEvent extends SparepartEvent {
+  final String sparepartId;
+  RemoveFromBookmarkEvent({
+    required this.sparepartId,
+  });
+  @override
+  List<Object?> get props => [sparepartId];
+}
+
 class AddToItemBookmarkEvent extends SparepartEvent {
   final String sparepartId;
   AddToItemBookmarkEvent({

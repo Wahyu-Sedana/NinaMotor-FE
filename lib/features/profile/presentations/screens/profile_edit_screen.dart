@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/presentations/widgets/form_widget.dart';
-import 'package:frontend/cores/utils/colors.dart';
+import 'package:frontend/cores/services/app_config.dart';
+import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/features/profile/data/models/profile_model.dart';
+import 'package:frontend/features/profile/presentations/bloc/event/profile_event.dart';
+import 'package:frontend/features/profile/presentations/bloc/profile_bloc.dart';
+import 'package:frontend/features/profile/presentations/bloc/state/profile_state.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileEditScreen extends StatefulWidget {
-  final ProfileModel profile;
-
-  const ProfileEditScreen({super.key, required this.profile});
+  const ProfileEditScreen({super.key});
 
   @override
   State<ProfileEditScreen> createState() => _ProfileEditScreenState();
@@ -16,28 +19,19 @@ class ProfileEditScreen extends StatefulWidget {
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _namaController;
-  late TextEditingController _emailController;
-  late TextEditingController _alamatController;
-  late TextEditingController _noTelpController;
+  final _namaController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _alamatController = TextEditingController();
+  final _noTelpController = TextEditingController();
   File? _imageFile;
-
-  @override
-  void initState() {
-    super.initState();
-    _namaController = TextEditingController(text: widget.profile.nama);
-    _emailController = TextEditingController(text: widget.profile.email);
-    _alamatController =
-        TextEditingController(text: widget.profile.alamat ?? '');
-    _noTelpController =
-        TextEditingController(text: widget.profile.noTelp ?? '');
-  }
+  bool _isLoading = false;
 
   @override
   void dispose() {
     _namaController.dispose();
     _emailController.dispose();
     _alamatController.dispose();
+    _noTelpController.dispose();
     super.dispose();
   }
 
@@ -50,136 +44,143 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     }
   }
 
-  void _saveProfile() {
+  void _saveProfile(ProfileModel profile) {
     if (_formKey.currentState!.validate()) {
-      final updatedProfile = ProfileModel(
-        id: widget.profile.id,
-        nama: _namaController.text,
-        email: _emailController.text,
-        role: widget.profile.role,
-        emailVerifiedAt: widget.profile.emailVerifiedAt,
-        alamat: _alamatController.text,
-        noTelp: widget.profile.noTelp,
-        profile: widget.profile.profile,
-        createdAt: widget.profile.createdAt,
-        updatedAt: widget.profile.updatedAt,
-      );
-      // TODO: Send updatedProfile to backend
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profil berhasil disimpan")),
-      );
+      context.read<ProfileBloc>().add(
+            UpdateProfileEvent(
+              nama: _namaController.text,
+              alamat: _alamatController.text,
+              noTelp: _noTelpController.text,
+              imageProfile: _imageFile?.path,
+            ),
+          );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final profileUrl = widget.profile.profile;
+    return BlocProvider(
+      create: (_) => locator<ProfileBloc>()..add(GetProfileEvent()),
+      child: BlocConsumer<ProfileBloc, ProfileState>(
+        listener: (context, state) {
+          if (state is ProfileLoading) {
+            setState(() => _isLoading = true);
+          } else if (state is ProfileLoadSuccess) {
+            setState(() => _isLoading = false);
+          } else if (state is ProfileError) {
+            setState(() => _isLoading = false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Gagal: ${state.failure.message}"),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is ProfileLoading && !_isLoading) {
+            return const Scaffold(
+                body: Center(child: CircularProgressIndicator()));
+          }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: _pickImage,
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundImage: _imageFile != null
-                          ? FileImage(_imageFile!)
-                          : (profileUrl != null
-                              ? NetworkImage(profileUrl)
-                              : null) as ImageProvider<Object>?,
-                      backgroundColor: Colors.grey.shade300,
-                      child: (profileUrl == null && _imageFile == null)
-                          ? const Icon(Icons.person,
-                              size: 60, color: Colors.white)
-                          : null,
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 4,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.red,
-                        ),
-                        child: const Icon(Icons.edit,
-                            size: 18, color: Colors.white),
+          if (state is ProfileLoadSuccess) {
+            final profile = state.profile;
+
+            _namaController.text = profile.nama;
+            _emailController.text = profile.email;
+            _alamatController.text = profile.alamat ?? '';
+            _noTelpController.text = profile.noTelp ?? '';
+
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.red,
+                title: const Text("Edit Profile",
+                    style: TextStyle(color: Colors.white)),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+              body: Stack(
+                children: [
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: _isLoading ? null : _pickImage,
+                            child: CircleAvatar(
+                              radius: 60,
+                              backgroundImage: _imageFile != null
+                                  ? FileImage(_imageFile!)
+                                  : (profile.profile != null
+                                      ? NetworkImage(
+                                          "${baseURLImage}${profile.profile}")
+                                      : null) as ImageProvider<Object>?,
+                              backgroundColor: Colors.grey.shade300,
+                              child: (profile.profile == null &&
+                                      _imageFile == null)
+                                  ? const Icon(Icons.person,
+                                      size: 60, color: Colors.white)
+                                  : null,
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          buildTextField(
+                              controller: _namaController, label: 'Nama'),
+                          const SizedBox(height: 16),
+                          buildTextField(
+                              controller: _emailController,
+                              label: 'Email',
+                              enabled: false),
+                          const SizedBox(height: 16),
+                          buildTextField(
+                              controller: _alamatController, label: 'Alamat'),
+                          const SizedBox(height: 16),
+                          buildTextField(
+                              controller: _noTelpController, label: 'No Telp'),
+                          const SizedBox(height: 30),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _isLoading
+                                  ? null
+                                  : () => _saveProfile(profile),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                              ),
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white)
+                                  : const Text("Simpan",
+                                      style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30),
-              buildTextField(
-                controller: _namaController,
-                label: 'Nama',
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Nama tidak boleh kosong'
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              buildTextField(
-                controller: _emailController,
-                label: 'Email',
-                enabled: false,
-              ),
-              const SizedBox(height: 16),
-              buildTextField(
-                controller: _alamatController,
-                label: 'Alamat',
-              ),
-              const SizedBox(height: 16),
-              buildTextField(
-                controller: _noTelpController,
-                label: 'No Telp',
-              ),
-              // const SizedBox(height: 16),
-              // buildTextField(
-              //   controller: _noKendaraanController,
-              //   label: 'No Kendaraan',
-              // ),
-              // const SizedBox(height: 16),
-              // buildTextField(
-              //   controller: _namaKendaraanController,
-              //   label: 'Nama Kendaraan',
-              // ),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _saveProfile,
-                  label: const Text("Simpan",
-                      style: TextStyle(fontSize: 16, color: white)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
                     ),
-                    elevation: 4,
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
+                  if (_isLoading)
+                    Container(
+                      color: Colors.black.withOpacity(0.3),
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                ],
+              ),
+            );
+          }
+
+          if (state is ProfileError) {
+            return Scaffold(body: Center(child: Text(state.failure.message)));
+          }
+
+          return const Scaffold(body: SizedBox());
+        },
       ),
     );
   }

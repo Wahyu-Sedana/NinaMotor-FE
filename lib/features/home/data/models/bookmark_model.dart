@@ -12,13 +12,18 @@ class BookmarkResponseModel {
   });
 
   factory BookmarkResponseModel.fromJson(Map<String, dynamic> json) {
+    List<BookmarkModel> _data = [];
+
+    if (json['data'] is List) {
+      _data = (json['data'] as List)
+          .map((data) => BookmarkModel.fromJson(data ?? {}))
+          .toList();
+    }
+
     return BookmarkResponseModel(
-      status: json['status'] ?? 0,
-      message: json['message'] ?? '',
-      data: (json['data'] as List<dynamic>)
-          .map((e) => BookmarkModel.fromJson(e))
-          .toList(),
-    );
+        status: json['status'] ?? 0,
+        message: json['message'] ?? '',
+        data: _data);
   }
 }
 
