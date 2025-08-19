@@ -33,17 +33,21 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     final session = locator<Session>();
-    final token = session.getToken;
+    // final token = session.getToken;
 
-    if (token.isNotEmpty) {
-      Future.delayed(const Duration(seconds: 3), () {
-        Navigator.pushReplacementNamed(context, RouteService.homeRoute);
-      });
-    } else {
-      Future.delayed(const Duration(seconds: 3), () {
-        Navigator.pushReplacementNamed(context, RouteService.onboardingRoute);
-      });
-    }
+    // if (token.isNotEmpty) {
+    //   Future.delayed(const Duration(seconds: 3), () {
+    //     Navigator.pushReplacementNamed(context, RouteService.homeRoute);
+    //   });
+    // } else {
+    //   Future.delayed(const Duration(seconds: 3), () {
+    //     Navigator.pushReplacementNamed(context, RouteService.onboardingRoute);
+    //   });
+    // }
+
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacementNamed(context, RouteService.homeRoute);
+    });
   }
 
   @override

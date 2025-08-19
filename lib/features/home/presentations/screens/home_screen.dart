@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/cores/utils/colors.dart';
+import 'package:frontend/cores/utils/injection.dart';
+import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/home/presentations/screens/bookmark_tab.dart';
 import 'package:frontend/features/home/presentations/screens/cart_tab.dart';
 import 'package:frontend/features/home/presentations/screens/home_tab.dart';
 import 'package:frontend/features/profile/presentations/screens/profile_tab.dart';
+import 'package:frontend/features/routes/route.dart';
 import 'package:frontend/features/servismotor/presentations/screens/service_motor_tab.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,9 +27,45 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   void _onTabTapped(int index) {
+    final session = locator<Session>();
+    final token = session.getToken;
+
+    if (token.isEmpty && index != 0) {
+      _showLoginDialog();
+      return;
+    }
+
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  void _showLoginDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Anda belum login"),
+        content: const Text(
+            "Silakan login terlebih dahulu untuk mengakses fitur ini."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Batal"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: redColor),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, RouteService.loginRoute);
+            },
+            child: const Text(
+              "Login",
+              style: TextStyle(color: white),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
