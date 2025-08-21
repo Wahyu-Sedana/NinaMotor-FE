@@ -36,8 +36,6 @@ Widget buildDetailRow(String label, String value, {bool isTotal = false}) {
 
 List<Widget> buildItemCards(Transaction item) {
   return item.cartItems!.map((cart) {
-    final subtotal = item.total * cart.quantity;
-
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 1,
@@ -77,7 +75,10 @@ List<Widget> buildItemCards(Transaction item) {
                   Row(
                     children: [
                       Text(
-                        formatIDR(double.tryParse(item.total)),
+                        item.type_transaction == "servis"
+                            ? formatIDR(double.tryParse(item.total.toString()))
+                            : formatIDR(double.tryParse(
+                                item.cartItems![0].hargaJual.toString())),
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -98,7 +99,7 @@ List<Widget> buildItemCards(Transaction item) {
 
             // Subtotal
             Text(
-              formatIDR(double.tryParse(subtotal)),
+              formatIDR(double.tryParse(item.total)),
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,

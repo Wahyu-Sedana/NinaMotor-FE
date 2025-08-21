@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    final session = locator<Session>();
+    // final session = locator<Session>();
     // final token = session.getToken;
 
     // if (token.isNotEmpty) {
