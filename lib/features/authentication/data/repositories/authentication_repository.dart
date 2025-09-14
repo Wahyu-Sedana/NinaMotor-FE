@@ -8,7 +8,12 @@ abstract class AuthenticationRepository {
       String email, String password, String fcmToken);
   Future<Either<Failure, AuthenticationModelLogout>> userLogout();
   Future<Either<Failure, AuthenticationModel>> userRegister(
-      String name, String email, String password, String cPassword);
+      String name,
+      String email,
+      String password,
+      String cPassword,
+      String alamat,
+      String noTelp);
 }
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -46,10 +51,15 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<Either<Failure, AuthenticationModel>> userRegister(
-      String name, String email, String password, String cPassword) async {
+      String name,
+      String email,
+      String password,
+      String cPassword,
+      String alamat,
+      String noTelp) async {
     try {
       final authenticationModelRegister = await authenticationDatasource
-          .userRegister(name, email, password, cPassword);
+          .userRegister(name, email, password, cPassword, alamat, noTelp);
       return Right(authenticationModelRegister);
     } on Exception catch (e) {
       return Left(ServerFailure(code: 500, message: e.toString()));

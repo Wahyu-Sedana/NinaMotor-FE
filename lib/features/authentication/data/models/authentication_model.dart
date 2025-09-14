@@ -31,11 +31,15 @@ class User {
   final String name;
   final String email;
   final String password;
+  final String alamat;
+  final String noTelp;
 
   User(
       {required this.id,
       required this.name,
       required this.email,
+      this.alamat = "",
+      this.noTelp = "",
       required this.password});
 
   Map<String, String> toJson() {

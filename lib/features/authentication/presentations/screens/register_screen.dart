@@ -18,18 +18,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final alamatController = TextEditingController();
+  final noTelpController = TextEditingController();
 
   void _onRegisterPressed() {
     final email = emailController.text;
     final password = passwordController.text;
     final name = nameController.text;
     final confirmPassword = confirmPasswordController.text;
+    final alamat = alamatController.text;
+    final noTelp = noTelpController.text;
 
     context.read<AuthenticationBloc>().add(RegisterEvent(
           email: email,
           password: password,
           cPassword: confirmPassword,
           name: name,
+          alamat: alamat,
+          noTelp: noTelp,
         ));
   }
 
@@ -107,6 +113,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 20),
 
+                  // Alamat
+                  TextField(
+                    controller: alamatController,
+                    decoration: InputDecoration(
+                      labelText: "Alamat",
+                      prefixIcon: const Icon(Icons.home_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // No Telp
+                  TextField(
+                    controller: noTelpController,
+                    decoration: InputDecoration(
+                      labelText: "No Telp",
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   // Password
                   TextField(
                     controller: passwordController,

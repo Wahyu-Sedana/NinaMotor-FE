@@ -8,7 +8,12 @@ abstract class AuthenticationUsecase {
       String email, String password, String fcmToken);
   Future<Either<Failure, AuthenticationModelLogout>> callLogout();
   Future<Either<Failure, AuthenticationModel>> callRegister(
-      String name, String email, String password, String cPassword);
+      String name,
+      String email,
+      String password,
+      String cPassword,
+      String alamat,
+      String noTelp);
 }
 
 class AuthenticationUsecaseImpl implements AuthenticationUsecase {
@@ -29,8 +34,13 @@ class AuthenticationUsecaseImpl implements AuthenticationUsecase {
 
   @override
   Future<Either<Failure, AuthenticationModel>> callRegister(
-      String name, String email, String password, String cPassword) async {
+      String name,
+      String email,
+      String password,
+      String cPassword,
+      String alamat,
+      String noTelp) async {
     return authenticationRepository.userRegister(
-        name, email, password, cPassword);
+        name, email, password, cPassword, alamat, noTelp);
   }
 }
