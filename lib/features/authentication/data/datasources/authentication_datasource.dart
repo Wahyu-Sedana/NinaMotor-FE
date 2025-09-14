@@ -20,7 +20,7 @@ class AuthenticationDataSourceImpl implements AuthenticationDatasource {
   @override
   Future<AuthenticationModel> userLogin(
       String email, String password, String fcmToken) async {
-    final String url = '${baseURL}login';
+    final String url = '${AppConfig.baseURL}login';
     try {
       final response = await dio.post(url,
           data: {'email': email, 'password': password, 'fcm_token': fcmToken});
@@ -34,7 +34,7 @@ class AuthenticationDataSourceImpl implements AuthenticationDatasource {
 
   @override
   Future<AuthenticationModelLogout> userLogout() async {
-    final String url = '${baseURL}logout';
+    final String url = '${AppConfig.baseURL}logout';
     final session = locator<Session>();
     try {
       final response = await dio.post(
@@ -56,7 +56,7 @@ class AuthenticationDataSourceImpl implements AuthenticationDatasource {
   @override
   Future<AuthenticationModel> userRegister(
       String name, String email, String password, String cPassword) async {
-    final String url = '${baseURL}register';
+    final String url = '${AppConfig.baseURL}register';
     try {
       final response = await dio.post(url, data: {
         'nama': name,

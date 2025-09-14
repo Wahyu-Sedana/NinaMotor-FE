@@ -17,7 +17,7 @@ class ProfileDatasourceImpl implements ProfileDatasource {
 
   @override
   Future<ProfileResponse> getProfile() async {
-    final path = '${baseURL}profile';
+    final path = '${AppConfig.baseURL}profile';
     final session = locator<Session>();
     try {
       final response = await dio.post(path,
@@ -35,7 +35,7 @@ class ProfileDatasourceImpl implements ProfileDatasource {
   @override
   Future<ProfileResponse> updateProfile(
       String nama, String alamat, String noTelp, String imageProfile) async {
-    final path = '${baseURL}profile/update';
+    final path = '${AppConfig.baseURL}profile/update';
     final session = locator<Session>();
     try {
       final formData = FormData.fromMap({

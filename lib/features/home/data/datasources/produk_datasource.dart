@@ -31,7 +31,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
 
   @override
   Future<List<SparepartModel>> getSparepartList() async {
-    final String url = '${baseURL}sparepart';
+    final String url = '${AppConfig.baseURL}sparepart';
     final session = locator<Session>();
     try {
       final response = await dio.get(url,
@@ -55,7 +55,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
     required String sparepartId,
     required int quantity,
   }) async {
-    final String url = '${baseURL}cart';
+    final String url = '${AppConfig.baseURL}cart';
     final session = locator<Session>();
     try {
       final response = await dio.post(url,
@@ -77,7 +77,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
 
   @override
   Future<CartResponse> getItemCart() async {
-    final String url = '${baseURL}cart';
+    final String url = '${AppConfig.baseURL}cart';
     final session = locator<Session>();
     try {
       final response = await dio.get(url,
@@ -95,7 +95,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
 
   @override
   Future<CartResponse> removeItemCart({required String sparepartId}) async {
-    final String url = '${baseURL}cart/remove';
+    final String url = '${AppConfig.baseURL}cart/remove';
     final session = locator<Session>();
     try {
       final response = await dio.post(url,
@@ -117,7 +117,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
   @override
   Future<BookmarkResponseModel> addBookmark(
       {required String sparepartId}) async {
-    final String url = '${baseURL}bookmark';
+    final String url = '${AppConfig.baseURL}bookmark';
     final session = locator<Session>();
     try {
       final response = await dio.post(url,
@@ -138,7 +138,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
 
   @override
   Future<BookmarkResponseModel> getBookmark() async {
-    final String url = '${baseURL}bookmark';
+    final String url = '${AppConfig.baseURL}bookmark';
     final session = locator<Session>();
     try {
       final response = await dio.get(url,
@@ -157,7 +157,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
   @override
   Future<List<SparepartModel>> getSparepartByKategori(
       String namaKategori) async {
-    final String url = '${baseURL}sparepart/kategori';
+    final String url = '${AppConfig.baseURL}sparepart/kategori';
     final session = locator<Session>();
 
     try {
@@ -184,7 +184,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
   @override
   Future<BookmarkResponseModel> removeBookmarkCart(
       {required String sparepartId}) async {
-    final String url = '${baseURL}bookmark/remove';
+    final String url = '${AppConfig.baseURL}bookmark/remove';
     final session = locator<Session>();
 
     try {

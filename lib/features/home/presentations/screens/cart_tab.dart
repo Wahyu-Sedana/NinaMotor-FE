@@ -129,7 +129,7 @@ class _CartTabState extends State<CartTab> {
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           child: Image.network(
-                                            '$baseURLImage${cart.gambar}',
+                                            '${AppConfig.baseURLImage}${cart.gambar}',
                                             width: 48,
                                             height: 48,
                                             fit: BoxFit.cover,

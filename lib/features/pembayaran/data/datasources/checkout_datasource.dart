@@ -35,7 +35,7 @@ class CheckoutDatasourceImpl implements CheckoutDatasource {
       };
 
       final response = await dio.get(
-        '${baseURL}transaksi/list',
+        '${AppConfig.baseURL}transaksi/list',
         queryParameters: queryParams,
         options: Options(
           headers: {

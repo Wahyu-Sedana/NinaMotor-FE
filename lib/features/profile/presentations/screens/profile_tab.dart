@@ -72,7 +72,8 @@ class ProfileTab extends StatelessWidget {
                       CircleAvatar(
                         radius: 100,
                         backgroundImage: profile.profile != null
-                            ? NetworkImage("${baseURLImage}${profile.profile}")
+                            ? NetworkImage(
+                                "${AppConfig.baseURLImage}${profile.profile}")
                             : null,
                         child: profile.profile == null
                             ? const Icon(

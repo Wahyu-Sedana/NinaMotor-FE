@@ -116,7 +116,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                   ? FileImage(_imageFile!)
                                   : (profile.profile != null
                                       ? NetworkImage(
-                                          "${baseURLImage}${profile.profile}")
+                                          "${AppConfig.baseURLImage}${profile.profile}")
                                       : null) as ImageProvider<Object>?,
                               backgroundColor: Colors.grey.shade300,
                               child: (profile.profile == null &&

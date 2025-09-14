@@ -127,7 +127,7 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(24),
                       child: Image.network(
-                        '$baseURLImage${sparepart.gambarProduk}',
+                        '${AppConfig.baseURLImage}${sparepart.gambarProduk}',
                         height: 200,
                         width: double.infinity,
                         fit: BoxFit.cover,

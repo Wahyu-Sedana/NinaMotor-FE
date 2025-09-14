@@ -14,7 +14,7 @@ class KategoriDataSourceImpl implements KategoriDatasource {
 
   @override
   Future<List<KategoriModel>> getKategoriList() async {
-    final String url = '${baseURL}kategori';
+    final String url = '${AppConfig.baseURL}kategori';
 
     try {
       final response = await dio.get(url);

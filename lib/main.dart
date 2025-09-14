@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/utils/firebase_options.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
-import 'package:frontend/cores/utils/midtrans_helper.dart';
 import 'package:frontend/cores/utils/notification_helper.dart';
 import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/presentations/bloc/authentication_bloc.dart';
@@ -38,7 +37,6 @@ Future<void> main() async {
   }
   await locatorInit();
   await locator.isReady<Session>();
-  await MidtransHelper.initSDK();
   try {
     await NotificationHelper().init();
     logger("Notification helper initialized successfully",

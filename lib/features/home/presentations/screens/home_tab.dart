@@ -561,7 +561,7 @@ class _HomeTabState extends State<HomeTab> with RouteAware {
                                           topRight: Radius.circular(16)),
                                       child: item.gambarProduk.isNotEmpty
                                           ? Image.network(
-                                              '$baseURLImage${item.gambarProduk}',
+                                              '${AppConfig.baseURLImage}${item.gambarProduk}',
                                               height: 140,
                                               width: double.infinity,
                                               fit: BoxFit.cover,

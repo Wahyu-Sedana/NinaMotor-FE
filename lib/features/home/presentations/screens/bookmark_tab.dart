@@ -71,7 +71,7 @@ class _BookmarkTabState extends State<BookmarkTab> {
                       itemBuilder: (context, index) {
                         final bookmark = bookmarks[index];
                         final imageUrl =
-                            '$baseURLImage${bookmark.sparepart.gambarProduk}';
+                            '${AppConfig.baseURLImage}${bookmark.sparepart.gambarProduk}';
 
                         return Container(
                           decoration: BoxDecoration(

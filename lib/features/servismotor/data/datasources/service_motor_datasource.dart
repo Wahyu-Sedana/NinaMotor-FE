@@ -19,7 +19,7 @@ class ServiceDatasourceImpl implements ServiceDatasource {
   @override
   Future<ServisMotorResponse> postService(
       String noKendaraan, String keluhan, JenisMotor jenisMotor) async {
-    final path = '${baseURL}servis-motor';
+    final path = '${AppConfig.baseURL}servis-motor';
     final session = locator<Session>();
 
     try {
@@ -44,7 +44,7 @@ class ServiceDatasourceImpl implements ServiceDatasource {
 
   @override
   Future<ServisMotorResponse> getServiceMotor() async {
-    final path = '${baseURL}servis-motor';
+    final path = '${AppConfig.baseURL}servis-motor';
     final session = locator<Session>();
 
     try {

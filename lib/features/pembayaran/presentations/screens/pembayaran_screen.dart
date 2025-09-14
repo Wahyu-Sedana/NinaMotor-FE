@@ -6,7 +6,6 @@ import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/enum.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
-import 'package:frontend/cores/utils/midtrans_helper.dart';
 import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/home/data/models/cart_model.dart';
 
@@ -87,7 +86,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     logger('Processing regular payment with method: $metodePembayaran');
 
     try {
-      final response = await dio.post('${baseURL}transaksi/create',
+      final response = await dio.post('${AppConfig.baseURL}transaksi/create',
           data: {
             'user_id': session.getIdUser,
             'total': total,
@@ -137,8 +136,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             );
           }
-
-          await MidtransHelper.startPayment(snapToken);
 
           if (mounted) {
             Navigator.of(context).pop();
@@ -449,7 +446,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.network(
-                            '$baseURLImage${item.gambar}',
+                            '${AppConfig.baseURLImage}${item.gambar}',
                             width: 48,
                             height: 48,
                             fit: BoxFit.cover,

@@ -141,7 +141,7 @@ class _ProdukListScreenState extends State<ProdukListScreen> with RouteAware {
                                     ),
                                     child: item.gambarProduk.isNotEmpty
                                         ? Image.network(
-                                            '$baseURLImage${item.gambarProduk}',
+                                            '${AppConfig.baseURLImage}${item.gambarProduk}',
                                             height: 140,
                                             width: double.infinity,
                                             fit: BoxFit.cover,
