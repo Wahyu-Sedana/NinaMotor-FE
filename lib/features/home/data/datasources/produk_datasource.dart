@@ -19,7 +19,7 @@ abstract class SparepartDatasource {
     required String sparepartId,
   });
   Future<BookmarkResponseModel> getBookmark();
-  Future<List<SparepartModel>> getSparepartByKategori(String namaKategori);
+  Future<SparepartResponse> getSparepartByKategori(String namaKategori);
   Future<BookmarkResponseModel> removeBookmarkCart(
       {required String sparepartId});
 }
@@ -155,8 +155,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
   }
 
   @override
-  Future<List<SparepartModel>> getSparepartByKategori(
-      String namaKategori) async {
+  Future<SparepartResponse> getSparepartByKategori(String namaKategori) async {
     final String url = '${AppConfig.baseURL}sparepart/kategori';
     final session = locator<Session>();
 
@@ -172,8 +171,7 @@ class SparepartDataSourceImpl implements SparepartDatasource {
         ),
       );
 
-      final List data = response.data['data'];
-      return data.map((e) => SparepartModel.fromJson(e)).toList();
+      return SparepartResponse.fromJson(response.data);
     } on DioException catch (e) {
       logger(e.message ?? e.toString(),
           label: "Get Sparepart By Kategori Error");

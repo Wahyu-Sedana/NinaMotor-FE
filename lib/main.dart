@@ -83,6 +83,7 @@ class MainApp extends StatelessWidget {
                   CheckoutBloc(transactionUsecaseImpl: locator()))
         ],
         child: MaterialApp(
+          navigatorKey: rootNavigatorKey,
           navigatorObservers: [routeObserver],
           debugShowCheckedModeBanner: false,
           initialRoute: '/',

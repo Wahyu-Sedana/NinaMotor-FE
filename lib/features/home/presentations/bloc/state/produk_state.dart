@@ -22,6 +22,15 @@ class SparepartLoaded extends SparepartState {
   List<Object?> get props => [spareparts];
 }
 
+class KategoriSparepartLoaded extends SparepartState {
+  final SparepartResponse sparepartsByKategori;
+
+  KategoriSparepartLoaded({required this.sparepartsByKategori});
+
+  @override
+  List<Object?> get props => [sparepartsByKategori];
+}
+
 class SparepartError extends SparepartState {
   final Failure failure;
 

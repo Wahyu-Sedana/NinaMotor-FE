@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/features/pembayaran/data/models/checkout_model.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void logger(dynamic value, {String? label}) {
   if (kDebugMode) {
@@ -23,6 +24,7 @@ final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
 
 final RouteObserver<ModalRoute<void>> routeObserver =
     RouteObserver<ModalRoute<void>>();
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 String formatDateIndonesia(DateTime date) {
   const List<String> months = [
@@ -127,5 +129,19 @@ String getItemsPreview(Transaction transaction) {
     final firstItem = transaction.cartItems!.first;
     final totalItems = _getTotalItemsCount(transaction);
     return '${firstItem.nama} dan ${transaction.cartItems!.length - 1} item lainnya ($totalItems total)';
+  }
+}
+
+Future<void> openSnapPayment(String snapToken,
+    {bool isProduction = false}) async {
+  final baseUrl = isProduction
+      ? 'https://app.midtrans.com/snap/v2/vtweb/'
+      : 'https://app.sandbox.midtrans.com/snap/v2/vtweb/';
+  final url = Uri.parse('$baseUrl$snapToken');
+
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  } else {
+    throw Exception('Tidak bisa membuka URL pembayaran');
   }
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/cores/utils/colors.dart';
-import 'package:frontend/cores/utils/injection.dart';
-import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/cores/utils/strings.dart';
 import 'package:frontend/features/routes/route.dart';
 
@@ -31,19 +29,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _controller.forward();
-
-    // final session = locator<Session>();
-    // final token = session.getToken;
-
-    // if (token.isNotEmpty) {
-    //   Future.delayed(const Duration(seconds: 3), () {
-    //     Navigator.pushReplacementNamed(context, RouteService.homeRoute);
-    //   });
-    // } else {
-    //   Future.delayed(const Duration(seconds: 3), () {
-    //     Navigator.pushReplacementNamed(context, RouteService.onboardingRoute);
-    //   });
-    // }
 
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacementNamed(context, RouteService.homeRoute);

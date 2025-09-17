@@ -130,7 +130,7 @@ class SparepartBloc extends Bloc<SparepartEvent, SparepartState> {
         emit(SparepartError(failure: failure));
       },
       (data) async {
-        emit(SparepartLoaded(spareparts: data));
+        emit(KategoriSparepartLoaded(sparepartsByKategori: data));
         await Future.delayed(Duration(milliseconds: 300));
       },
     );

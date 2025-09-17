@@ -165,6 +165,39 @@ void showTransactionDetail({
                       getPaymentMethodDisplay(transaction.metodePembayaran,
                           transaction.paymentInfo),
                     ),
+                    if (transaction.snapToken != null &&
+                        transaction.snapToken!.isNotEmpty)
+                      GestureDetector(
+                        onTap: () => openSnapPayment(transaction.snapToken!),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 120,
+                                child: Text(
+                                  "Snap Token",
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                              const Text(': '),
+                              Expanded(
+                                child: Text(
+                                  "Klik untuk bayar",
+                                  style: const TextStyle(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     if (transaction.alamat != null)
                       buildDetailRow("Alamat", transaction.alamat!),
                     if (transaction.cartItems != null &&

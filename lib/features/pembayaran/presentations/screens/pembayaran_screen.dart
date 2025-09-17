@@ -113,7 +113,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             _showCashPaymentDialog(context, orderId);
           }
         } else {
-          // Check if snap_token exists for transfer payments
           final snapToken = json['snap_token'];
 
           if (snapToken == null || snapToken.isEmpty) {
@@ -122,19 +121,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           }
 
           if (mounted) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => const AlertDialog(
-                content: Row(
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(width: 16),
-                    Text('Memproses pembayaran...'),
-                  ],
-                ),
-              ),
-            );
+            await openSnapPayment(snapToken, isProduction: false);
           }
 
           if (mounted) {

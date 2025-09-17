@@ -21,7 +21,7 @@ abstract class SparepartRepository {
     required String sparepartId,
   });
   Future<Either<Failure, BookmarkResponseModel>> getBookmark();
-  Future<Either<Failure, List<SparepartModel>>> getSparepartByKategori(
+  Future<Either<Failure, SparepartResponse>> getSparepartByKategori(
       String namaKategori);
   Future<Either<Failure, BookmarkResponseModel>> removeBookmark({
     required String sparepartId,
@@ -104,7 +104,7 @@ class SparepartRepositoryImpl implements SparepartRepository {
   }
 
   @override
-  Future<Either<Failure, List<SparepartModel>>> getSparepartByKategori(
+  Future<Either<Failure, SparepartResponse>> getSparepartByKategori(
       String namaKategori) async {
     try {
       final result =

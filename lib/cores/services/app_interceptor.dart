@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/cores/utils/session.dart';
+import 'package:frontend/features/routes/route.dart';
 
 class AppInterceptor extends Interceptor {
   @override
@@ -28,6 +29,16 @@ class AppInterceptor extends Interceptor {
       "Dio Error: ${err.message}, Status: ${err.response?.statusCode}",
       label: 'dio-error',
     );
+
+    if (err.response!.statusCode == 401) {
+      final session = locator<Session>();
+      session.clearSession();
+
+      Navigator.of(rootNavigatorKey.currentContext!)
+          .pushNamedAndRemoveUntil(RouteService.loginRoute, (route) => false);
+
+      return;
+    }
 
     final message = err.type == DioExceptionType.connectionError
         ? 'Tidak dapat terhubung ke server.'

@@ -1,5 +1,28 @@
 import 'kategori_model.dart';
 
+class SparepartResponse {
+  final String message;
+  final int statusCode;
+  final List<SparepartModel> spareparts;
+
+  SparepartResponse(
+      {required this.spareparts, this.message = '', this.statusCode = 0});
+
+  factory SparepartResponse.fromJson(Map<String, dynamic> json) {
+    List<SparepartModel> _data = [];
+
+    if (json['data'] is List) {
+      _data = (json['data'] as List)
+          .map((data) => SparepartModel.fromJson(data ?? {}))
+          .toList();
+    }
+    return SparepartResponse(
+        statusCode: json['status'] ?? 0,
+        message: json['message'] ?? '',
+        spareparts: _data);
+  }
+}
+
 class SparepartModel {
   final String kodeSparepart;
   final String nama;

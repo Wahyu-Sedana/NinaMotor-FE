@@ -37,7 +37,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     result.fold(
       (error) => emit(ProfileError(failure: error)),
-      (data) => emit(ProfileLoadSuccess(profile: data.user)),
+      (data) => emit(ProfileUpdateSuccess(message: data.message)),
     );
   }
 }
