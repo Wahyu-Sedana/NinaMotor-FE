@@ -112,7 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, RouteService.lupaPasswordScreen);
+                    },
                     child: const Text(
                       "Lupa password?",
                       style: TextStyle(color: Colors.black54),

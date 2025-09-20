@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/enum.dart';
 import 'package:frontend/features/servismotor/presentations/bloc/event/service_motor_event.dart';
 import 'package:frontend/features/servismotor/presentations/bloc/service_motor_bloc.dart';
@@ -19,47 +20,12 @@ class _ServicePengajuanScreenState extends State<ServicePengajuanScreen>
   final TextEditingController _keluhanController = TextEditingController();
 
   JenisMotor? _selectedMotorType;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeAnimations();
-  }
 
   @override
   void dispose() {
     _noKendaraanController.dispose();
     _keluhanController.dispose();
-    _animationController.dispose();
     super.dispose();
-  }
-
-  void _initializeAnimations() {
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
-    ));
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.3, 1.0, curve: Curves.easeOutBack),
-    ));
-
-    _animationController.forward();
   }
 
   void _submitForm() {
@@ -83,13 +49,7 @@ class _ServicePengajuanScreenState extends State<ServicePengajuanScreen>
       appBar: _buildAppBar(),
       body: BlocListener<MotorServiceBloc, MotorServiceState>(
         listener: _handleBlocState,
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: _buildBody(),
-          ),
-        ),
+        child: _buildBody(),
       ),
     );
   }
@@ -373,7 +333,10 @@ class _ServicePengajuanScreenState extends State<ServicePengajuanScreen>
                 : const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.send_rounded),
+                      Icon(
+                        Icons.send_rounded,
+                        color: white,
+                      ),
                       SizedBox(width: 8),
                       Text(
                         'Kirim Pengajuan',
