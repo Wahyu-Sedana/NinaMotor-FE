@@ -14,6 +14,9 @@ abstract class AuthenticationUsecase {
       String cPassword,
       String alamat,
       String noTelp);
+  Future<Either<Failure, AuthenticationModel>> checkUserEmaill(String email);
+  Future<Either<Failure, AuthenticationModel>> resetPassword(
+      String email, String newPassword);
 }
 
 class AuthenticationUsecaseImpl implements AuthenticationUsecase {
@@ -42,5 +45,16 @@ class AuthenticationUsecaseImpl implements AuthenticationUsecase {
       String noTelp) async {
     return authenticationRepository.userRegister(
         name, email, password, cPassword, alamat, noTelp);
+  }
+
+  @override
+  Future<Either<Failure, AuthenticationModel>> checkUserEmaill(String email) {
+    return authenticationRepository.checkUserEmaill(email);
+  }
+
+  @override
+  Future<Either<Failure, AuthenticationModel>> resetPassword(
+      String email, String newPassword) {
+    return authenticationRepository.resetPassword(email, newPassword);
   }
 }

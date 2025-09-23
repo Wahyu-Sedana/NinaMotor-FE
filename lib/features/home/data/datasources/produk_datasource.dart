@@ -32,15 +32,11 @@ class SparepartDataSourceImpl implements SparepartDatasource {
   @override
   Future<List<SparepartModel>> getSparepartList() async {
     final String url = '${AppConfig.baseURL}sparepart';
-    final session = locator<Session>();
+    // final session = locator<Session>();
     try {
-      final response = await dio.get(url,
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer ${session.getToken}',
-              'Accept': 'application/json',
-            },
-          ));
+      final response = await dio.get(
+        url,
+      );
 
       final List data = response.data['data'];
       return data.map((e) => SparepartModel.fromJson(e)).toList();

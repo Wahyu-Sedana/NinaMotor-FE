@@ -69,3 +69,47 @@ class AuthenticationLogoutError extends AuthenticationState {
   @override
   List<Object> get props => [failure];
 }
+
+class AuthenticationCheckEmailLoading extends AuthenticationState {}
+
+class AuthenticationCheckEmailInitial extends AuthenticationState {}
+
+class AuthenticationCheckEmailSuccess extends AuthenticationState {
+  final AuthenticationModel authenticationModelEmail;
+  AuthenticationCheckEmailSuccess({
+    required this.authenticationModelEmail,
+  });
+  @override
+  List<Object> get props => [User];
+}
+
+class AuthenticationCheckEmailError extends AuthenticationState {
+  final Failure failure;
+  AuthenticationCheckEmailError({
+    required this.failure,
+  });
+  @override
+  List<Object> get props => [failure];
+}
+
+class AuthenticationResetPasswordLoading extends AuthenticationState {}
+
+class AuthenticationResetPasswordInitial extends AuthenticationState {}
+
+class AuthenticationResetPasswordSuccess extends AuthenticationState {
+  final AuthenticationModel authenticationModelReset;
+  AuthenticationResetPasswordSuccess({
+    required this.authenticationModelReset,
+  });
+  @override
+  List<Object> get props => [User];
+}
+
+class AuthenticationResetPasswordError extends AuthenticationState {
+  final Failure failure;
+  AuthenticationResetPasswordError({
+    required this.failure,
+  });
+  @override
+  List<Object> get props => [failure];
+}

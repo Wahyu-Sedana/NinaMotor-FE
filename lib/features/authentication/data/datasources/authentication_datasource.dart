@@ -11,6 +11,8 @@ abstract class AuthenticationDatasource {
   Future<AuthenticationModelLogout> userLogout();
   Future<AuthenticationModel> userRegister(String name, String email,
       String password, String cPassword, String alamat, String noTelp);
+  Future<AuthenticationModel> checkUserEmaill(String email);
+  Future<AuthenticationModel> resetPassword(String email, String newPassword);
 }
 
 class AuthenticationDataSourceImpl implements AuthenticationDatasource {
@@ -70,6 +72,33 @@ class AuthenticationDataSourceImpl implements AuthenticationDatasource {
       return AuthenticationModel.fromJson(response.data);
     } on DioException catch (e) {
       logger(e.toString(), label: "error register datasource");
+      throw (e.toString());
+    }
+  }
+
+  @override
+  Future<AuthenticationModel> checkUserEmaill(String email) async {
+    final String url = '${AppConfig.baseURL}check-email';
+    try {
+      final response = await dio.post(url, data: {'email': email});
+
+      return AuthenticationModel.fromJson(response.data);
+    } on DioException catch (e) {
+      logger(e.toString(), label: "error check email datasource");
+      throw (e.toString());
+    }
+  }
+
+  @override
+  Future<AuthenticationModel> resetPassword(
+      String email, String newPassword) async {
+    final String url = '${AppConfig.baseURL}reset-password';
+    try {
+      final response = await dio
+          .post(url, data: {'email': email, 'new_password': newPassword});
+      return AuthenticationModel.fromJson(response.data);
+    } on DioException catch (e) {
+      logger(e.toString(), label: "error reset password datasource");
       throw (e.toString());
     }
   }

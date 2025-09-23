@@ -22,47 +22,6 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeAnimations();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  void _initializeAnimations() {
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
-    ));
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.3, 1.0, curve: Curves.easeOutBack),
-    ));
-
-    _animationController.forward();
-  }
-
   @override
   Widget build(BuildContext context) {
     final session = locator<Session>();
@@ -75,14 +34,8 @@ class _ProfileTabState extends State<ProfileTab>
         child: Scaffold(
           backgroundColor: Colors.grey[50],
           body: SafeArea(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: BlocBuilder<ProfileBloc, ProfileState>(
-                  builder: (context, state) => _buildProfileContent(state),
-                ),
-              ),
+            child: BlocBuilder<ProfileBloc, ProfileState>(
+              builder: (context, state) => _buildProfileContent(state),
             ),
           ),
         ),

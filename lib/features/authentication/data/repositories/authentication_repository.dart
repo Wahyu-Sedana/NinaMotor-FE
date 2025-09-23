@@ -14,6 +14,9 @@ abstract class AuthenticationRepository {
       String cPassword,
       String alamat,
       String noTelp);
+  Future<Either<Failure, AuthenticationModel>> checkUserEmaill(String email);
+  Future<Either<Failure, AuthenticationModel>> resetPassword(
+      String email, String newPassword);
 }
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -61,6 +64,35 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       final authenticationModelRegister = await authenticationDatasource
           .userRegister(name, email, password, cPassword, alamat, noTelp);
       return Right(authenticationModelRegister);
+    } on Exception catch (e) {
+      return Left(ServerFailure(code: 500, message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthenticationModel>> checkUserEmaill(
+      String email) async {
+    try {
+      final authenticationModelEmail =
+          await authenticationDatasource.checkUserEmaill(email);
+      if (authenticationModelEmail.status == 404) {
+        return Left(ServerFailure(
+            code: 404, message: authenticationModelEmail.message));
+      } else {
+        return Right(authenticationModelEmail);
+      }
+    } on Exception catch (e) {
+      return Left(ServerFailure(code: 500, message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthenticationModel>> resetPassword(
+      String email, String newPassword) async {
+    try {
+      final authenticationModel =
+          await authenticationDatasource.resetPassword(email, newPassword);
+      return Right(authenticationModel);
     } on Exception catch (e) {
       return Left(ServerFailure(code: 500, message: e.toString()));
     }

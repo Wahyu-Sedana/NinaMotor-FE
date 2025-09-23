@@ -14,6 +14,7 @@ class AuthenticationBloc
     on<LoginEvent>(_onLogin);
     on<LogoutEvent>(_onLogout);
     on<RegisterEvent>(_onRegister);
+    on<CheckEmailEvent>(_onCheckEmail);
   }
 
   Future<void> _onLogin(
@@ -60,5 +61,33 @@ class AuthenticationBloc
       (error) => emit(AuthenticationLogoutError(failure: error)),
       (data) => emit(AuthenticationLogoutSuccess()),
     );
+  }
+
+  Future<void> _onCheckEmail(
+      CheckEmailEvent event, Emitter<AuthenticationState> emit) async {
+    emit(AuthenticationCheckEmailLoading());
+
+    final result = await authenticationUsecaseImpl.checkUserEmaill(event.email);
+    final session = locator<Session>();
+    result.fold((error) => emit(AuthenticationCheckEmailError(failure: error)),
+        (data) {
+      session.setEmail = data.user.email;
+      emit(AuthenticationCheckEmailSuccess(authenticationModelEmail: data));
+    });
+  }
+
+  Future<void> _onResetPassword(
+      ResetPasswordEvent event, Emitter<AuthenticationState> emit) async {
+    emit(AuthenticationResetPasswordLoading());
+
+    final result = await authenticationUsecaseImpl.resetPassword(
+        event.email, event.newPassword);
+    final session = locator<Session>();
+    result
+        .fold((error) => emit(AuthenticationResetPasswordError(failure: error)),
+            (data) {
+      session.setEmail = data.user.email;
+      emit(AuthenticationResetPasswordSuccess(authenticationModelReset: data));
+    });
   }
 }

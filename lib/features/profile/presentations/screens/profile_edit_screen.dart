@@ -30,14 +30,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
   bool _hasChanges = false;
   ProfileModel? _currentProfile;
 
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
   @override
   void initState() {
     super.initState();
-    _initializeAnimations();
     _setupTextControllerListeners();
   }
 
@@ -47,33 +42,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
     _emailController.dispose();
     _alamatController.dispose();
     _noTelpController.dispose();
-    _animationController.dispose();
     super.dispose();
-  }
-
-  void _initializeAnimations() {
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
-    ));
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.3, 1.0, curve: Curves.easeOutBack),
-    ));
-
-    _animationController.forward();
   }
 
   void _setupTextControllerListeners() {
@@ -394,25 +363,19 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
   }
 
   Widget _buildEditForm() {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                _buildProfileImageSection(),
-                const SizedBox(height: 32),
-                _buildFormFields(),
-                const SizedBox(height: 32),
-                _buildSaveButton(),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            _buildProfileImageSection(),
+            const SizedBox(height: 32),
+            _buildFormFields(),
+            const SizedBox(height: 32),
+            _buildSaveButton(),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );
