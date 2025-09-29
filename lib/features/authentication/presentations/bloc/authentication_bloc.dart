@@ -15,6 +15,7 @@ class AuthenticationBloc
     on<LogoutEvent>(_onLogout);
     on<RegisterEvent>(_onRegister);
     on<CheckEmailEvent>(_onCheckEmail);
+    on<ResetPasswordEvent>(_onResetPassword);
   }
 
   Future<void> _onLogin(

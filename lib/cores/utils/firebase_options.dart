@@ -41,48 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCv3g6D0LhIggwrLgOCm5qPQq1HVDl-W7o',
-    appId: '1:900477324465:web:7f6c64199d8b7db090a690',
-    messagingSenderId: '900477324465',
-    projectId: 'nina-motor',
-    authDomain: 'nina-motor.firebaseapp.com',
-    storageBucket: 'nina-motor.firebasestorage.app',
-    measurementId: 'G-GDW2TXBPWD',
+    apiKey: 'AIzaSyBeGc52irf9PIRUP62plxCqNmss1Bpe2ew',
+    appId: '1:453165515440:web:d5539cb05061c34feb7175',
+    messagingSenderId: '453165515440',
+    projectId: 'ninamotor-53934',
+    authDomain: 'ninamotor-53934.firebaseapp.com',
+    storageBucket: 'ninamotor-53934.firebasestorage.app',
+    measurementId: 'G-2H6951H8J5',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD-9eVR_rX-s0Vje4_zllwGJFxh48fg9Ns',
-    appId: '1:900477324465:android:4dcf2c7717e2805d90a690',
-    messagingSenderId: '900477324465',
-    projectId: 'nina-motor',
-    storageBucket: 'nina-motor.firebasestorage.app',
+    apiKey: 'AIzaSyD0U1ZdklTBovWrcJVA8FcwSSdOHQpa7d0',
+    appId: '1:453165515440:android:bb4f777ca6a9398feb7175',
+    messagingSenderId: '453165515440',
+    projectId: 'ninamotor-53934',
+    storageBucket: 'ninamotor-53934.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD7U-DReA6FA-R6g8bECgAWReVxoXyXTdw',
-    appId: '1:900477324465:ios:2a5c804b5752fd1290a690',
-    messagingSenderId: '900477324465',
-    projectId: 'nina-motor',
-    storageBucket: 'nina-motor.firebasestorage.app',
-    iosBundleId: 'com.ninamotor.app',
+    apiKey: 'AIzaSyAzLll556iqwZbhDZpcPiTLE1o4NO1eJNc',
+    appId: '1:453165515440:ios:48b088d8309b795feb7175',
+    messagingSenderId: '453165515440',
+    projectId: 'ninamotor-53934',
+    storageBucket: 'ninamotor-53934.firebasestorage.app',
+    iosBundleId: 'com.ninamotor.dev',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD7U-DReA6FA-R6g8bECgAWReVxoXyXTdw',
-    appId: '1:900477324465:ios:17e53b28641032af90a690',
-    messagingSenderId: '900477324465',
-    projectId: 'nina-motor',
-    storageBucket: 'nina-motor.firebasestorage.app',
+    apiKey: 'AIzaSyAzLll556iqwZbhDZpcPiTLE1o4NO1eJNc',
+    appId: '1:453165515440:ios:0e18c587c2f3627aeb7175',
+    messagingSenderId: '453165515440',
+    projectId: 'ninamotor-53934',
+    storageBucket: 'ninamotor-53934.firebasestorage.app',
     iosBundleId: 'com.example.frontend',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCv3g6D0LhIggwrLgOCm5qPQq1HVDl-W7o',
-    appId: '1:900477324465:web:0b240053375493a290a690',
-    messagingSenderId: '900477324465',
-    projectId: 'nina-motor',
-    authDomain: 'nina-motor.firebaseapp.com',
-    storageBucket: 'nina-motor.firebasestorage.app',
-    measurementId: 'G-68965Q60GF',
+    apiKey: 'AIzaSyBeGc52irf9PIRUP62plxCqNmss1Bpe2ew',
+    appId: '1:453165515440:web:7a689a8cfc56a994eb7175',
+    messagingSenderId: '453165515440',
+    projectId: 'ninamotor-53934',
+    authDomain: 'ninamotor-53934.firebaseapp.com',
+    storageBucket: 'ninamotor-53934.firebasestorage.app',
+    measurementId: 'G-CGB4V8MG4Z',
   );
 }

@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyD7U-DReA6FA-R6g8bECgAWReVxoXyXTdw</string>
+	<string>AIzaSyAzLll556iqwZbhDZpcPiTLE1o4NO1eJNc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>900477324465</string>
+	<string>453165515440</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.frontend</string>
 	<key>PROJECT_ID</key>
-	<string>nina-motor</string>
+	<string>ninamotor-53934</string>
 	<key>STORAGE_BUCKET</key>
-	<string>nina-motor.firebasestorage.app</string>
+	<string>ninamotor-53934.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:900477324465:ios:17e53b28641032af90a690</string>
+	<string>1:453165515440:ios:0e18c587c2f3627aeb7175</string>
 </dict>
 </plist>
