@@ -4,11 +4,11 @@ enum Environment { local, ngrok, production }
 
 class AppConfig {
   //static const Environment env = Environment.local;
-  static const Environment envNgrok = Environment.ngrok;
-  // static const Environment envProduction = Environment.production;
+  // static const Environment env = Environment.ngrok;
+  static const Environment env = Environment.production;
 
   static String get baseURL {
-    switch (envNgrok) {
+    switch (env) {
       case Environment.local:
         if (Platform.isAndroid) {
           return "http://10.0.2.2:8000/api/";
@@ -24,7 +24,7 @@ class AppConfig {
   }
 
   static String get baseURLImage {
-    switch (envNgrok) {
+    switch (env) {
       case Environment.local:
         if (Platform.isAndroid) {
           return "http://10.0.2.2:8000/storage/";
@@ -40,7 +40,7 @@ class AppConfig {
   }
 
   static String get midtransURL {
-    switch (envNgrok) {
+    switch (env) {
       case Environment.local:
         if (Platform.isAndroid) {
           return "http://10.0.2.2:8000/api/midtrans/callback";

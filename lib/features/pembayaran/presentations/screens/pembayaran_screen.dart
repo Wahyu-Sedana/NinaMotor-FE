@@ -70,6 +70,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
           'metode_pembayaran': paymentMethod,
           'alamat': '',
           'cart_items': widget.cartItems.map((item) => item.toJson()).toList(),
+          'type_pembelian': 0
         },
         options: Options(
           headers: {
@@ -94,8 +95,21 @@ class _CheckoutScreenState extends State<CheckoutScreen>
             throw Exception('Snap token tidak ditemukan');
           }
 
-          await openSnapPayment(snapToken, isProduction: false);
-          _handleTransferSuccess(orderId);
+          final paymentResult = await openSnapPayment(
+            context,
+            snapToken,
+            isProduction: false,
+          );
+          if (paymentResult != null) {
+            if (paymentResult['status'] == 'success' ||
+                paymentResult['status'] == 'pending') {
+              _handleTransferSuccess(orderId);
+            } else if (paymentResult['status'] == 'cancelled') {
+              _showErrorSnackBar('Pembayaran dibatalkan');
+            } else if (paymentResult['status'] == 'failed') {
+              _showErrorSnackBar('Pembayaran gagal');
+            }
+          }
         }
       } else {
         throw Exception(responseData['message'] ?? 'Gagal membuat transaksi');

@@ -5,7 +5,7 @@ import 'package:frontend/features/authentication/data/models/authentication_mode
 
 abstract class AuthenticationRepository {
   Future<Either<Failure, AuthenticationModel>> userLogin(
-      String email, String password, String fcmToken);
+      String email, String password, String fcmToken, String phoneId);
   Future<Either<Failure, AuthenticationModelLogout>> userLogout();
   Future<Either<Failure, AuthenticationModel>> userRegister(
       String name,
@@ -15,8 +15,20 @@ abstract class AuthenticationRepository {
       String alamat,
       String noTelp);
   Future<Either<Failure, AuthenticationModel>> checkUserEmaill(String email);
-  Future<Either<Failure, AuthenticationModel>> resetPassword(
-      String email, String newPassword);
+  // Future<Either<Failure, AuthenticationModel>> resetPassword(
+  //     String email, String newPassword);
+
+  Future<Either<Failure, String>> resendVerification(String email);
+
+  Future<Either<Failure, String>> forgotPassword(String email);
+
+  Future<Either<Failure, String>> resetPassword({
+    required String token,
+    required String password,
+    required String passwordConfirmation,
+  });
+
+  Future<Either<Failure, String>> verifyEmail(String token);
 }
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -26,10 +38,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<Either<Failure, AuthenticationModel>> userLogin(
-      String email, String password, String fcmToken) async {
+      String email, String password, String fcmToken, String phoneId) async {
     try {
-      final authenticationModelLogin =
-          await authenticationDatasource.userLogin(email, password, fcmToken);
+      final authenticationModelLogin = await authenticationDatasource.userLogin(
+          email, password, fcmToken, phoneId);
       if (authenticationModelLogin.status == 404) {
         return Left(ServerFailure(
             code: 404, message: authenticationModelLogin.message));
@@ -87,14 +99,50 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<Failure, AuthenticationModel>> resetPassword(
-      String email, String newPassword) async {
+  Future<Either<Failure, String>> resendVerification(String email) async {
     try {
-      final authenticationModel =
-          await authenticationDatasource.resetPassword(email, newPassword);
-      return Right(authenticationModel);
+      final result = await authenticationDatasource.resendVerification(email);
+      return Right(result);
     } on Exception catch (e) {
-      return Left(ServerFailure(code: 500, message: e.toString()));
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> forgotPassword(String email) async {
+    try {
+      final result = await authenticationDatasource.forgotPassword(email);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> resetPassword({
+    required String token,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    try {
+      final result = await authenticationDatasource.resetPassword(
+        token: token,
+        password: password,
+        passwordConfirmation: passwordConfirmation,
+      );
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> verifyEmail(String token) async {
+    try {
+      final result = await authenticationDatasource.verifyEmail(token);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 }

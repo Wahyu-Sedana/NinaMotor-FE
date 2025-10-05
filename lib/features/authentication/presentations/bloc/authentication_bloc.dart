@@ -14,8 +14,11 @@ class AuthenticationBloc
     on<LoginEvent>(_onLogin);
     on<LogoutEvent>(_onLogout);
     on<RegisterEvent>(_onRegister);
-    on<CheckEmailEvent>(_onCheckEmail);
-    on<ResetPasswordEvent>(_onResetPassword);
+    // on<CheckEmailEvent>(_onCheckEmail);
+    on<ResendVerificationEvent>(_onResendVerificationEvent);
+    on<VerifyEmailEvent>(_onVerifyEmailEvent);
+    on<ForgotPasswordEvent>(_onForgotPasswordEvent);
+    on<ResetPasswordEvent>(_onResetPasswordEvent);
   }
 
   Future<void> _onLogin(
@@ -23,7 +26,7 @@ class AuthenticationBloc
     emit(AuthenticationLoginLoading());
 
     final result = await authenticationUsecaseImpl.callLogin(
-        event.email, event.password, event.fcmToken);
+        event.email, event.password, event.fcmToken, event.phoneId);
     final session = locator<Session>();
     result.fold((error) => emit(AuthenticationLoginError(failure: error)),
         (data) {
@@ -64,31 +67,77 @@ class AuthenticationBloc
     );
   }
 
-  Future<void> _onCheckEmail(
-      CheckEmailEvent event, Emitter<AuthenticationState> emit) async {
-    emit(AuthenticationCheckEmailLoading());
+  // Future<void> _onCheckEmail(
+  //     CheckEmailEvent event, Emitter<AuthenticationState> emit) async {
+  //   emit(AuthenticationCheckEmailLoading());
 
-    final result = await authenticationUsecaseImpl.checkUserEmaill(event.email);
-    final session = locator<Session>();
-    result.fold((error) => emit(AuthenticationCheckEmailError(failure: error)),
-        (data) {
-      session.setEmail = data.user.email;
-      emit(AuthenticationCheckEmailSuccess(authenticationModelEmail: data));
-    });
+  //   final result = await authenticationUsecaseImpl.checkUserEmaill(event.email);
+  //   final session = locator<Session>();
+  //   result.fold((error) => emit(AuthenticationCheckEmailError(failure: error)),
+  //       (data) {
+  //     session.setEmail = data.user.email;
+  //     emit(AuthenticationCheckEmailSuccess(authenticationModelEmail: data));
+  //   });
+  // }
+
+  Future<void> _onResendVerificationEvent(
+    ResendVerificationEvent event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(ResendVerificationLoading());
+
+    final result =
+        await authenticationUsecaseImpl.resendVerification(event.email);
+
+    result.fold(
+      (failure) => emit(ResendVerificationError(failure: failure)),
+      (message) => emit(ResendVerificationSuccess(message: message)),
+    );
   }
 
-  Future<void> _onResetPassword(
-      ResetPasswordEvent event, Emitter<AuthenticationState> emit) async {
-    emit(AuthenticationResetPasswordLoading());
+  Future<void> _onVerifyEmailEvent(
+    VerifyEmailEvent event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(VerifyEmailLoading());
 
-    final result = await authenticationUsecaseImpl.resetPassword(
-        event.email, event.newPassword);
-    final session = locator<Session>();
-    result
-        .fold((error) => emit(AuthenticationResetPasswordError(failure: error)),
-            (data) {
-      session.setEmail = data.user.email;
-      emit(AuthenticationResetPasswordSuccess(authenticationModelReset: data));
-    });
+    final result = await authenticationUsecaseImpl.verifyEmail(event.token);
+
+    result.fold(
+      (failure) => emit(VerifyEmailError(failure: failure)),
+      (message) => emit(VerifyEmailSuccess(message: message)),
+    );
+  }
+
+  Future<void> _onForgotPasswordEvent(
+    ForgotPasswordEvent event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(ForgotPasswordLoading());
+
+    final result = await authenticationUsecaseImpl.forgotPassword(event.email);
+
+    result.fold(
+      (failure) => emit(ForgotPasswordError(failure: failure)),
+      (message) => emit(ForgotPasswordSuccess(message: message)),
+    );
+  }
+
+  Future<void> _onResetPasswordEvent(
+    ResetPasswordEvent event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(ResetPasswordLoading());
+
+    final result = await authenticationUsecaseImpl.resetPasswordWithToken(
+      token: event.token,
+      password: event.password,
+      passwordConfirmation: event.passwordConfirmation,
+    );
+
+    result.fold(
+      (failure) => emit(ResetPasswordError(failure: failure)),
+      (message) => emit(ResetPasswordSuccess(message: message)),
+    );
   }
 }

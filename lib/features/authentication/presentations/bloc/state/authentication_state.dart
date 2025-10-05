@@ -113,3 +113,83 @@ class AuthenticationResetPasswordError extends AuthenticationState {
   @override
   List<Object> get props => [failure];
 }
+
+class ResendVerificationLoading extends AuthenticationState {}
+
+class ResendVerificationSuccess extends AuthenticationState {
+  final String message;
+
+  ResendVerificationSuccess({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class ResendVerificationError extends AuthenticationState {
+  final Failure failure;
+
+  ResendVerificationError({required this.failure});
+
+  @override
+  List<Object> get props => [failure];
+}
+
+class ForgotPasswordLoading extends AuthenticationState {}
+
+class ForgotPasswordSuccess extends AuthenticationState {
+  final String message;
+
+  ForgotPasswordSuccess({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class ForgotPasswordError extends AuthenticationState {
+  final Failure failure;
+
+  ForgotPasswordError({required this.failure});
+
+  @override
+  List<Object> get props => [failure];
+}
+
+class ResetPasswordLoading extends AuthenticationState {}
+
+class ResetPasswordSuccess extends AuthenticationState {
+  final String message;
+
+  ResetPasswordSuccess({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class ResetPasswordError extends AuthenticationState {
+  final Failure failure;
+
+  ResetPasswordError({required this.failure});
+
+  @override
+  List<Object> get props => [failure];
+}
+
+class VerifyEmailLoading extends AuthenticationState {}
+
+class VerifyEmailSuccess extends AuthenticationState {
+  final String message;
+
+  VerifyEmailSuccess({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class VerifyEmailError extends AuthenticationState {
+  final Failure failure;
+
+  VerifyEmailError({required this.failure});
+
+  @override
+  List<Object> get props => [failure];
+}

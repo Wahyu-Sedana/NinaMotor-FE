@@ -4,8 +4,9 @@ import 'package:frontend/features/authentication/data/models/authentication_mode
 import 'package:frontend/features/authentication/data/repositories/authentication_repository.dart';
 
 abstract class AuthenticationUsecase {
+  // Existing methods
   Future<Either<Failure, AuthenticationModel>> callLogin(
-      String email, String password, String fcmToken);
+      String email, String password, String fcmToken, String phoneId);
   Future<Either<Failure, AuthenticationModelLogout>> callLogout();
   Future<Either<Failure, AuthenticationModel>> callRegister(
       String name,
@@ -15,8 +16,17 @@ abstract class AuthenticationUsecase {
       String alamat,
       String noTelp);
   Future<Either<Failure, AuthenticationModel>> checkUserEmaill(String email);
-  Future<Either<Failure, AuthenticationModel>> resetPassword(
-      String email, String newPassword);
+  // Future<Either<Failure, AuthenticationModel>> resetPassword(
+  //     String email, String newPassword);
+
+  Future<Either<Failure, String>> resendVerification(String email);
+  Future<Either<Failure, String>> verifyEmail(String token);
+  Future<Either<Failure, String>> forgotPassword(String email);
+  Future<Either<Failure, String>> resetPasswordWithToken({
+    required String token,
+    required String password,
+    required String passwordConfirmation,
+  });
 }
 
 class AuthenticationUsecaseImpl implements AuthenticationUsecase {
@@ -26,8 +36,9 @@ class AuthenticationUsecaseImpl implements AuthenticationUsecase {
 
   @override
   Future<Either<Failure, AuthenticationModel>> callLogin(
-      String email, String password, String fcmToken) {
-    return authenticationRepository.userLogin(email, password, fcmToken);
+      String email, String password, String fcmToken, String phoneId) {
+    return authenticationRepository.userLogin(
+        email, password, fcmToken, phoneId);
   }
 
   @override
@@ -52,9 +63,37 @@ class AuthenticationUsecaseImpl implements AuthenticationUsecase {
     return authenticationRepository.checkUserEmaill(email);
   }
 
+  // @override
+  // Future<Either<Failure, AuthenticationModel>> resetPassword(
+  //     String email, String newPassword) {
+  //   return authenticationRepository.resetPassword(email, newPassword);
+  // }
+
   @override
-  Future<Either<Failure, AuthenticationModel>> resetPassword(
-      String email, String newPassword) {
-    return authenticationRepository.resetPassword(email, newPassword);
+  Future<Either<Failure, String>> resendVerification(String email) {
+    return authenticationRepository.resendVerification(email);
+  }
+
+  @override
+  Future<Either<Failure, String>> verifyEmail(String token) {
+    return authenticationRepository.verifyEmail(token);
+  }
+
+  @override
+  Future<Either<Failure, String>> forgotPassword(String email) {
+    return authenticationRepository.forgotPassword(email);
+  }
+
+  @override
+  Future<Either<Failure, String>> resetPasswordWithToken({
+    required String token,
+    required String password,
+    required String passwordConfirmation,
+  }) {
+    return authenticationRepository.resetPassword(
+      token: token,
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+    );
   }
 }

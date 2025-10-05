@@ -1,11 +1,14 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cores/utils/device_info.dart';
 import 'package:frontend/cores/utils/injection.dart';
 import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/authentication/presentations/bloc/authentication_bloc.dart';
 import 'package:frontend/features/authentication/presentations/bloc/event/authentication_event.dart';
 import 'package:frontend/features/authentication/presentations/bloc/state/authentication_state.dart';
+import 'package:frontend/features/authentication/presentations/screens/email_verification_screen.dart';
+import 'package:frontend/features/authentication/presentations/screens/forgot_password_screen.dart';
 import 'package:frontend/features/routes/route.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,10 +26,16 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = emailController.text;
     final password = passwordController.text;
     final token = await FirebaseMessaging.instance.getToken();
+    String phoneId = await DeviceService.getDeviceId();
 
     if (token != null) {
       context.read<AuthenticationBloc>().add(
-            LoginEvent(email: email, password: password, fcmToken: token),
+            LoginEvent(
+              email: email,
+              password: password,
+              fcmToken: token,
+              phoneId: phoneId,
+            ),
           );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -43,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
+          // Login Loading
           if (state is AuthenticationLoginLoading) {
             showDialog(
               context: context,
@@ -51,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           }
 
+          // Login Success
           if (state is AuthenticationLoginSuccess) {
             final session = locator<Session>();
             session.setToken = state.authenticationModelLogin.token;
@@ -58,11 +69,20 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.pushReplacementNamed(context, RouteService.homeRoute);
           }
 
+          // Login Error
           if (state is AuthenticationLoginError) {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.failure.message)),
-            );
+
+            final errorMessage = state.failure.message;
+
+            if (errorMessage.toLowerCase().contains('verify') ||
+                errorMessage.toLowerCase().contains('verifikasi')) {
+              _showEmailVerificationDialog();
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(errorMessage)),
+              );
+            }
           }
         },
         child: SafeArea(
@@ -88,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 40),
                 TextField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: "Email",
                     prefixIcon: const Icon(Icons.email_outlined),
@@ -113,8 +134,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(
-                          context, RouteService.lupaPasswordScreen);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordScreen(),
+                        ),
+                      );
                     },
                     child: const Text(
                       "Lupa password?",
@@ -161,5 +186,60 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void _showEmailVerificationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber, color: Colors.orange.shade700, size: 28),
+            const SizedBox(width: 12),
+            const Text('Email Belum Diverifikasi'),
+          ],
+        ),
+        content: const Text(
+          'Silakan verifikasi email Anda terlebih dahulu sebelum login.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EmailVerificationScreen(
+                    email: emailController.text.trim(),
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Verifikasi Sekarang'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }

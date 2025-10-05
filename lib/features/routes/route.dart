@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/authentication/presentations/screens/login_screen.dart';
-import 'package:frontend/features/authentication/presentations/screens/lupa_password_screen.dart';
 import 'package:frontend/features/authentication/presentations/screens/register_screen.dart';
 import 'package:frontend/features/home/presentations/screens/home_screen.dart';
 import 'package:frontend/features/home/presentations/screens/produk_list_screen.dart';
@@ -27,8 +26,6 @@ class RouteService {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case listProdukRoute:
         return MaterialPageRoute(builder: (_) => const ProdukListScreen());
-      case lupaPasswordScreen:
-        return MaterialPageRoute(builder: (_) => const LupaPasswordScreen());
       case historyPembyaranRoute:
         return MaterialPageRoute(
             builder: (_) => const TransactionHistoryScreen());

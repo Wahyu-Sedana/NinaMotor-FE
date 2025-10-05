@@ -180,7 +180,7 @@ class _ServicePengajuanScreenState extends State<ServicePengajuanScreen>
       controller: _noKendaraanController,
       decoration: InputDecoration(
         labelText: 'Nomor Kendaraan',
-        hintText: 'Contoh: B 1234 ABC',
+        hintText: 'Contoh: B1234ABC',
         prefixIcon: const Icon(Icons.motorcycle_rounded),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

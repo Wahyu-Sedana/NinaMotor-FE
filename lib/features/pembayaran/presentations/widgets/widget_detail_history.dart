@@ -168,7 +168,9 @@ void showTransactionDetail({
                     if (transaction.snapToken != null &&
                         transaction.snapToken!.isNotEmpty)
                       GestureDetector(
-                        onTap: () => openSnapPayment(transaction.snapToken!),
+                        onTap: () => openSnapPayment(
+                            context, transaction.snapToken!,
+                            isProduction: false),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Row(

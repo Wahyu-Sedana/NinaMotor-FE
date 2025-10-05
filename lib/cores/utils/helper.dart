@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/features/pembayaran/data/models/checkout_model.dart';
+import 'package:frontend/features/pembayaran/presentations/screens/snap_webview_screen.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 void logger(dynamic value, {String? label}) {
   if (kDebugMode) {
@@ -132,16 +132,49 @@ String getItemsPreview(Transaction transaction) {
   }
 }
 
-Future<void> openSnapPayment(String snapToken,
-    {bool isProduction = false}) async {
-  final baseUrl = isProduction
-      ? 'https://app.midtrans.com/snap/v2/vtweb/'
-      : 'https://app.sandbox.midtrans.com/snap/v2/vtweb/';
-  final url = Uri.parse('$baseUrl$snapToken');
+Future<Map<String, dynamic>?> openSnapPayment(
+  BuildContext context,
+  String snapToken, {
+  bool isProduction = false,
+}) async {
+  final result = await Navigator.push<Map<String, dynamic>>(
+    context,
+    MaterialPageRoute(
+      builder: (context) => SnapWebViewScreen(
+        snapToken: snapToken,
+        isProduction: isProduction,
+        onPaymentResult: (result) {
+          logger(result, label: 'Payment result');
+        },
+      ),
+    ),
+  );
 
-  if (await canLaunchUrl(url)) {
-    await launchUrl(url, mode: LaunchMode.externalApplication);
-  } else {
-    throw Exception('Tidak bisa membuka URL pembayaran');
+  if (result != null && context.mounted) {
+    if (result['status'] == 'success') {
+      _showSuccessSnackBar(context, 'Pembayaran berhasil!');
+    } else if (result['status'] == 'pending') {
+      _showSuccessSnackBar(context, 'Pembayaran menunggu konfirmasi');
+    }
   }
+
+  return result;
+}
+
+void _showSuccessSnackBar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Row(
+        children: [
+          const Icon(Icons.check_circle_rounded, color: Colors.white),
+          const SizedBox(width: 8),
+          Expanded(child: Text(message)),
+        ],
+      ),
+      backgroundColor: Colors.green,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.all(16),
+    ),
+  );
 }
