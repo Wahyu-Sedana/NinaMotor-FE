@@ -23,19 +23,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final redColor = Colors.red.shade600;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
-          // Forgot Password Loading
           if (state is ForgotPasswordLoading) {
             showDialog(
               context: context,
@@ -44,136 +37,164 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             );
           }
 
-          // Forgot Password Success
           if (state is ForgotPasswordSuccess) {
-            Navigator.pop(context); // Close loading dialog
-            _showSuccessDialog(state.message);
+            Navigator.pop(context);
+            _showSuccessDialog();
           }
 
-          // Forgot Password Error
           if (state is ForgotPasswordError) {
-            Navigator.pop(context); // Close loading dialog
+            Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.failure.message),
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.redAccent,
               ),
             );
           }
         },
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-
-                  // Icon
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // 🔹 Logo bulat dengan gradient
+                    Container(
+                      height: 90,
+                      width: 90,
                       decoration: BoxDecoration(
-                        color: Colors.red.shade50,
                         shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.lock_reset,
-                        size: 60,
-                        color: Colors.red.shade400,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Title
-                  const Text(
-                    'Lupa Password?',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Masukkan email Anda dan kami akan mengirimkan link untuk reset password',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Email field
-                  TextFormField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Masukkan email Anda',
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            const BorderSide(color: Colors.blue, width: 2),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Email tidak boleh kosong';
-                      }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                          .hasMatch(value)) {
-                        return 'Format email tidak valid';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Submit button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: _handleForgotPassword,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'Kirim Link Reset Password',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        gradient: LinearGradient(
+                          colors: [redColor, Colors.redAccent.shade100],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
                       ),
+                      child: const Icon(
+                        Icons.lock_reset_rounded,
+                        color: Colors.white,
+                        size: 48,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 32),
 
-                  // Back to login
-                  Center(
-                    child: TextButton(
+                    // 🔹 Judul
+                    Text(
+                      "Lupa Password?",
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.grey.shade900,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Masukkan email Anda untuk menerima tautan reset password.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 15,
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 36),
+
+                    // 🔹 Card Form
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 24),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          // Email Field
+                          TextFormField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              hintText: "Alamat Email",
+                              prefixIcon: const Icon(
+                                Icons.email_outlined,
+                                size: 22,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Email tidak boleh kosong';
+                              }
+                              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                  .hasMatch(value)) {
+                                return 'Format email tidak valid';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 28),
+
+                          // Button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _handleForgotPassword,
+                              style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16.0),
+                                backgroundColor: redColor,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                elevation: 3,
+                              ),
+                              child: const Text(
+                                "Kirim Link Reset",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // 🔹 Back to Login
+                    TextButton.icon(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Kembali ke Login'),
+                      icon: Icon(Icons.arrow_back_ios_new_rounded,
+                          size: 16, color: redColor),
+                      label: Text(
+                        "Kembali ke Login",
+                        style: TextStyle(
+                          color: redColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -184,41 +205,40 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   void _handleForgotPassword() {
     if (!_formKey.currentState!.validate()) return;
-
     context.read<AuthenticationBloc>().add(
           ForgotPasswordEvent(email: _emailController.text.trim()),
         );
   }
 
-  void _showSuccessDialog(String message) {
+  void _showSuccessDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            Icon(Icons.check_circle, color: Colors.green.shade600, size: 28),
-            const SizedBox(width: 12),
-            const Text('Email Terkirim!'),
+            Icon(Icons.check_circle_rounded,
+                color: Colors.green.shade600, size: 28),
+            const SizedBox(width: 10),
+            const Text("Berhasil"),
           ],
         ),
         content: Text(
-          'Link reset password telah dikirim ke ${_emailController.text}. Silakan cek email Anda.',
+          "Tautan reset password telah dikirim ke ${_emailController.text}. "
+          "Silakan periksa email Anda.",
+          style: const TextStyle(height: 1.5),
         ),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Back to login
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.blue,
+            child: const Text(
+              "OK",
+              style: TextStyle(color: Colors.blue),
             ),
-            child: const Text('OK'),
-          ),
+          )
         ],
       ),
     );

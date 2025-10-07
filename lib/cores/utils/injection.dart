@@ -1,12 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:frontend/features/home/data/datasources/kategori_produk_datasource.dart';
 import 'package:frontend/features/home/data/datasources/produk_datasource.dart';
+import 'package:frontend/features/home/data/datasources/review_datasource.dart';
 import 'package:frontend/features/home/data/repositories/kategori_repository.dart';
 import 'package:frontend/features/home/data/repositories/produk_repository.dart';
+import 'package:frontend/features/home/data/repositories/review_repository.dart';
 import 'package:frontend/features/home/domain/usecases/kategori_usecase.dart';
 import 'package:frontend/features/home/domain/usecases/produk_usecase.dart';
+import 'package:frontend/features/home/domain/usecases/review_usecase.dart';
 import 'package:frontend/features/home/presentations/bloc/kategori_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
+import 'package:frontend/features/home/presentations/bloc/review_bloc.dart';
 import 'package:frontend/features/pembayaran/data/datasources/checkout_datasource.dart';
 import 'package:frontend/features/pembayaran/data/repositories/checkout_repository.dart';
 import 'package:frontend/features/pembayaran/domain/usecases/checkout_usecase.dart';
@@ -61,6 +65,10 @@ Future<void> locatorInit() async {
     () => CheckoutBloc(transactionUsecaseImpl: locator()),
   );
 
+  locator.registerFactory<ReviewBloc>(
+    () => ReviewBloc(reviewUsecaseImpl: locator()),
+  );
+
   // DataSource
   locator.registerLazySingleton<AuthenticationDatasource>(
       () => AuthenticationDataSourceImpl(dio: locator<Dio>()));
@@ -76,6 +84,9 @@ Future<void> locatorInit() async {
   );
   locator.registerLazySingleton<CheckoutDatasource>(
     () => CheckoutDatasourceImpl(dio: locator<Dio>()),
+  );
+  locator.registerLazySingleton<ReviewRemoteDatasource>(
+    () => ReviewRemoteDatasourceImpl(dio: locator<Dio>()),
   );
 
   // UseCase
@@ -95,6 +106,9 @@ Future<void> locatorInit() async {
   );
   locator.registerLazySingleton<TransactionUsecaseImpl>(
     () => TransactionUsecaseImpl(repository: locator()),
+  );
+  locator.registerLazySingleton<ReviewUsecaseImpl>(
+    () => ReviewUsecaseImpl(repository: locator()),
   );
 
   // Repository
@@ -117,5 +131,9 @@ Future<void> locatorInit() async {
   );
   locator.registerLazySingleton<TransactionRepository>(
     () => TransactionRepositoryImpl(datasource: locator()),
+  );
+  locator.registerLazySingleton<ReviewRepository>(
+    () => ReviewRepositoryImpl(
+        remoteDatasource: locator<ReviewRemoteDatasource>()),
   );
 }

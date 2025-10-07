@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -16,6 +17,13 @@ class NotificationHelper {
 
   Future<void> init() async {
     final settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
@@ -71,20 +79,34 @@ class NotificationHelper {
     // color: Color(0xff000000),
   );
 
+  final DarwinNotificationDetails _darwinNotificationDetails =
+      const DarwinNotificationDetails(
+    presentAlert: true,
+    presentSound: true,
+    presentBadge: true,
+    sound: 'sound.aiff',
+  );
+
   Future<void> showNotifications(RemoteMessage message) async {
     if (message.notification != null) {
       await flutterLocalNotificationsPlugin.show(
         0,
         message.notification?.title,
         message.notification?.body,
-        NotificationDetails(android: _androidNotificationDetails),
+        NotificationDetails(
+          android: _androidNotificationDetails,
+          iOS: _darwinNotificationDetails,
+        ),
       );
     } else {
       await flutterLocalNotificationsPlugin.show(
         0,
         message.data['action'],
         '',
-        NotificationDetails(android: _androidNotificationDetails),
+        NotificationDetails(
+          android: _androidNotificationDetails,
+          iOS: _darwinNotificationDetails,
+        ),
       );
     }
   }

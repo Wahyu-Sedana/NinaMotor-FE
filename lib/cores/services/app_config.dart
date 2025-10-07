@@ -3,7 +3,7 @@ import 'dart:io';
 enum Environment { local, ngrok, production }
 
 class AppConfig {
-  //static const Environment env = Environment.local;
+  // static const Environment env = Environment.local;
   // static const Environment env = Environment.ngrok;
   static const Environment env = Environment.production;
 

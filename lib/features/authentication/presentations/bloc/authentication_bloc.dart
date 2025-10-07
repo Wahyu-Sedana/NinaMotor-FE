@@ -42,12 +42,7 @@ class AuthenticationBloc
     emit(AuthenticationRegisterLoading());
 
     final result = await authenticationUsecaseImpl.callRegister(
-        event.name,
-        event.email,
-        event.password,
-        event.cPassword,
-        event.alamat,
-        event.noTelp);
+        event.name, event.email, event.password, event.cPassword);
 
     result.fold((error) => emit(AuthenticationRegisterError(failure: error)),
         (data) {

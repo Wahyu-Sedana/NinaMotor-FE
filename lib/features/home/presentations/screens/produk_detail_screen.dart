@@ -5,8 +5,13 @@ import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/presentations/bloc/event/produk_event.dart';
+import 'package:frontend/features/home/presentations/bloc/event/review_event.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';
+import 'package:frontend/features/home/presentations/bloc/review_bloc.dart';
 import 'package:frontend/features/home/presentations/bloc/state/produk_state.dart';
+import 'package:frontend/features/home/presentations/bloc/state/review_state.dart';
+import 'package:frontend/features/home/presentations/screens/review_screen.dart';
+import 'package:frontend/features/home/presentations/widgets/review_card_widget.dart';
 
 class SparepartDetailScreen extends StatefulWidget {
   final SparepartModel sparepart;
@@ -24,47 +29,21 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
   bool _isAddingToCart = false;
   double _totalPrice = 0.0;
 
-  late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    _initializeAnimations();
     _calculateTotalPrice();
     _loadBookmarkStatus();
+    _loadReviews();
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  void _initializeAnimations() {
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
-    ));
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.3, 1.0, curve: Curves.easeOutBack),
-    ));
-
-    _animationController.forward();
+  void _loadReviews() {
+    context.read<ReviewBloc>().add(
+          GetReviewsEvent(sparepartId: widget.sparepart.kodeSparepart),
+        );
   }
 
   void _loadBookmarkStatus() {
@@ -114,27 +93,220 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
           slivers: [
             _buildSliverAppBar(),
             SliverToBoxAdapter(
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: Column(
-                    children: [
-                      _buildProductInfo(),
-                      const SizedBox(height: 24),
-                      _buildQuantitySelector(),
-                      const SizedBox(height: 24),
-                      _buildSpecifications(),
-                      const SizedBox(height: 100),
-                    ],
-                  ),
-                ),
+              child: Column(
+                children: [
+                  _buildProductInfo(),
+                  const SizedBox(height: 24),
+                  _buildQuantitySelector(),
+                  const SizedBox(height: 24),
+                  _buildSpecifications(),
+                  const SizedBox(height: 24),
+                  _buildReviewsSection(),
+                  // const SizedBox(height: 24),
+                  // ElevatedButton.icon(
+                  //   icon: const Icon(Icons.add_comment_outlined),
+                  //   label: const Text('Tambah Ulasan'),
+                  //   onPressed: () => _showAddReviewDialog(context),
+                  // ),
+                  const SizedBox(height: 70),
+                ],
               ),
             ),
           ],
         ),
         bottomNavigationBar: _buildBottomBar(),
       ),
+    );
+  }
+
+  Widget _buildReviewsSection() {
+    return BlocBuilder<ReviewBloc, ReviewState>(
+      builder: (context, state) {
+        if (state is ReviewLoading) {
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        if (state is ReviewLoaded) {
+          final summary = state.reviewSummary;
+          final displayReviews = summary.reviews.take(3).toList();
+
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Ulasan Produk',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.star_rounded,
+                            size: 18,
+                            color: Colors.orange,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            summary.averageRating.toStringAsFixed(1),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    ...List.generate(5, (index) {
+                      return Icon(
+                        Icons.star_rounded,
+                        size: 18,
+                        color: index < summary.averageRating.round()
+                            ? Colors.orange
+                            : Colors.grey[300],
+                      );
+                    }),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${summary.totalReviews} ulasan',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                if (displayReviews.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.rate_review_outlined,
+                            size: 48,
+                            color: Colors.grey[300],
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Belum ada ulasan',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  ...displayReviews.map((review) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: ReviewCard(review: review),
+                    );
+                  }),
+                if (summary.reviews.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReviewsScreen(
+                              sparepartId: widget.sparepart.kodeSparepart,
+                              sparepartName: widget.sparepart.nama,
+                            ),
+                          ),
+                        );
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        side: BorderSide(color: Colors.blue.shade200),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Lihat Semua Ulasan (${summary.reviews.length})',
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(
+                            Icons.arrow_forward_rounded,
+                            size: 18,
+                            color: Colors.blue,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -291,18 +463,46 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
                 ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              _buildRatingStars(),
-              const SizedBox(width: 8),
-              Text(
-                '4.8 (127 ulasan)',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
-              ),
-            ],
+          BlocBuilder<ReviewBloc, ReviewState>(
+            builder: (context, state) {
+              if (state is ReviewLoaded) {
+                final summary = state.reviewSummary;
+                return Row(
+                  children: [
+                    ...List.generate(5, (index) {
+                      return Icon(
+                        Icons.star_rounded,
+                        size: 18,
+                        color: index < summary.averageRating.round()
+                            ? Colors.orange
+                            : Colors.grey[300],
+                      );
+                    }),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${summary.averageRating.toStringAsFixed(1)} (${summary.totalReviews} ulasan)',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return Row(
+                children: [
+                  _buildRatingStars(),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Memuat ulasan...',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 16),
           Container(
@@ -330,7 +530,7 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
           ),
           const SizedBox(height: 16),
           Text(
-            'Suku cadang berkualitas tinggi dengan desain ergonomis, siap dipasang pada kendaraan Anda. Telah teruji dan memenuhi standar kualitas internasional.',
+            '${widget.sparepart.deskripsi}',
             style: TextStyle(
               color: Colors.grey[700],
               fontSize: 16,
@@ -498,9 +698,6 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
           _buildSpecItem('Kode Produk', widget.sparepart.kodeSparepart),
           _buildSpecItem(
               'Kategori', widget.sparepart.kategori?.nama ?? 'Tidak tersedia'),
-          _buildSpecItem('Kondisi', 'Baru'),
-          _buildSpecItem('Garansi', '6 Bulan'),
-          _buildSpecItem('Asal', 'Original'),
         ],
       ),
     );

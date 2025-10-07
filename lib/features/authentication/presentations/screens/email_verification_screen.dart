@@ -40,10 +40,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       ),
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
-          // Resend Verification Loading
-          if (state is ResendVerificationLoading) {
-            // Loading handled by button state
-          }
+          if (state is ResendVerificationLoading) {}
 
           // Resend Verification Success
           if (state is ResendVerificationSuccess) {

@@ -45,16 +45,15 @@ class RegisterEvent extends AuthenticationEvent {
   final String email;
   final String password;
   final String cPassword;
-  final String alamat;
-  final String noTelp;
+  // final String alamat;
+  // final String noTelp;
 
-  RegisterEvent(
-      {required this.name,
-      required this.email,
-      required this.password,
-      required this.cPassword,
-      required this.alamat,
-      required this.noTelp});
+  RegisterEvent({
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.cPassword,
+  });
 
   @override
   List<Object?> get props => [name, email, password];
