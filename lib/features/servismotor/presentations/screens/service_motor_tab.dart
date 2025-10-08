@@ -215,33 +215,46 @@ class _ServiceMotorTabState extends State<ServiceMotorTab>
       builder: (context, state) {
         if (state is MotorServiceLoadSuccess) {
           final services = state.data.data ?? [];
-          final pending =
-              services.where((s) => s.status.toLowerCase() == 'pending').length;
-          final rejected = services
-              .where((s) => s.status.toLowerCase() == 'rejected')
-              .length;
-          final completed =
-              services.where((s) => s.status.toLowerCase() == 'done').length;
+          final stats = [
+            ('Total', '${services.length}', Colors.blue),
+            (
+              'Pending',
+              '${services.where((s) => s.status.toLowerCase() == 'pending').length}',
+              Colors.orange
+            ),
+            (
+              'Servis',
+              '${services.where((s) => s.status.toLowerCase() == 'in_service').length}',
+              Colors.indigo
+            ),
+            (
+              'Priced',
+              '${services.where((s) => s.status.toLowerCase() == 'priced').length}',
+              Colors.green
+            ),
+            (
+              'Ditolak',
+              '${services.where((s) => s.status.toLowerCase() == 'rejected').length}',
+              Colors.red
+            ),
+            (
+              'Selesai',
+              '${services.where((s) => s.status.toLowerCase() == 'done').length}',
+              Colors.purple
+            ),
+          ];
 
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                    child: _buildStatCard(
-                        'Total', '${services.length}', Colors.blue)),
-                const SizedBox(width: 8),
-                Expanded(
-                    child:
-                        _buildStatCard('Pending', '$pending', Colors.orange)),
-                const SizedBox(width: 8),
-                Expanded(
-                    child: _buildStatCard('Ditolak', '$rejected', Colors.red)),
-                const SizedBox(width: 8),
-                Expanded(
-                    child:
-                        _buildStatCard('Selesai', '$completed', Colors.purple)),
-              ],
+          return SizedBox(
+            height: 100,
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              scrollDirection: Axis.horizontal,
+              itemCount: stats.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final stat = stats[index];
+                return _buildStatCard(stat.$1, stat.$2, stat.$3);
+              },
             ),
           );
         }
@@ -250,29 +263,36 @@ class _ServiceMotorTabState extends State<ServiceMotorTab>
     );
   }
 
-  Widget _buildStatCard(String label, String value, MaterialColor color) {
+  Widget _buildStatCard(String label, String value, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      width: 110,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.shade100),
+        border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             value,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: color.shade600,
+              color: color,
             ),
           ),
+          const SizedBox(height: 4),
           Text(
             label,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.grey[600],
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -576,6 +596,8 @@ class _ServiceMotorTabState extends State<ServiceMotorTab>
         return Colors.green;
       case 'rejected':
         return Colors.red;
+      case 'in_service':
+        return Colors.indigo;
       default:
         return Colors.grey;
     }
@@ -585,9 +607,9 @@ class _ServiceMotorTabState extends State<ServiceMotorTab>
     switch (status.toLowerCase()) {
       case 'pending':
         return Icons.pending_rounded;
-      case 'approved':
-        return Icons.check_circle_outline_rounded;
-      case 'completed':
+      case 'in_service':
+        return Icons.motorcycle_outlined;
+      case 'done':
         return Icons.done_all_rounded;
       case 'rejected':
         return Icons.cancel_outlined;

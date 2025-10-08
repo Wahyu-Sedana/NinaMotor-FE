@@ -69,11 +69,6 @@ class ReviewCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (onDelete != null)
-                IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
-                ),
             ],
           ),
           const SizedBox(height: 12),
@@ -117,8 +112,6 @@ class ReviewCard extends StatelessWidget {
     }
   }
 }
-
-// lib/features/reviews/presentation/widgets/review_summary_header.dart
 
 class ReviewSummaryHeader extends StatelessWidget {
   final String sparepartName;

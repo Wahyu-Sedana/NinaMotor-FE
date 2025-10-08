@@ -200,8 +200,18 @@ void showTransactionDetail({
                           ),
                         ),
                       ),
-                    if (transaction.alamat != null)
-                      buildDetailRow("Alamat", transaction.alamat!),
+                    if (!(transaction.ongkir.isEmpty ||
+                        transaction.kurir.isEmpty ||
+                        transaction.estimasi.isEmpty ||
+                        transaction.service.isEmpty)) ...[
+                      buildDetailRow("Ongkir",
+                          formatIDR(double.tryParse(transaction.ongkir))),
+                      buildDetailRow("Kurir",
+                          '${transaction.kurir}/${transaction.service}'),
+                      buildDetailRow("Estimasi", transaction.estimasi),
+                      if (transaction.alamat != null)
+                        buildDetailRow("Alamat", transaction.alamat!),
+                    ],
                     if (transaction.cartItems != null &&
                         transaction.cartItems!.isNotEmpty) ...[
                       const Divider(height: 24),

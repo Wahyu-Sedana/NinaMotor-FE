@@ -3,6 +3,10 @@ class Transaction {
   final String userId;
   final DateTime tanggalTransaksi;
   final String total;
+  final String ongkir;
+  final String service;
+  final String kurir;
+  final String estimasi;
   final String statusPembayaran;
   final String metodePembayaran;
   final String type_transaction;
@@ -20,6 +24,10 @@ class Transaction {
     required this.statusPembayaran,
     required this.metodePembayaran,
     required this.type_transaction,
+    required this.ongkir,
+    required this.kurir,
+    required this.service,
+    required this.estimasi,
     this.alamat,
     this.snapToken,
     this.cartItems,
@@ -58,6 +66,10 @@ class Transaction {
       metodePembayaran: json['metode_pembayaran'] ?? "",
       alamat: json['alamat'],
       snapToken: json['snap_token'],
+      kurir: json['kurir'] ?? "",
+      ongkir: json['ongkir'] ?? "",
+      service: json['service'] ?? '',
+      estimasi: json['estimasi'] ?? "",
       cartItems: parsedCartItems,
       paymentInstruction: paymentInstruction,
       paymentInfo: paymentInfo,

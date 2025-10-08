@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/services/app_config.dart';
 import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/helper.dart';
+import 'package:frontend/cores/utils/injection.dart';
+import 'package:frontend/cores/utils/session.dart';
 import 'package:frontend/features/home/data/models/produk_model.dart';
 import 'package:frontend/features/home/presentations/bloc/event/produk_event.dart';
 import 'package:frontend/features/home/presentations/bloc/event/review_event.dart';
@@ -12,6 +14,7 @@ import 'package:frontend/features/home/presentations/bloc/state/produk_state.dar
 import 'package:frontend/features/home/presentations/bloc/state/review_state.dart';
 import 'package:frontend/features/home/presentations/screens/review_screen.dart';
 import 'package:frontend/features/home/presentations/widgets/review_card_widget.dart';
+import 'package:frontend/features/routes/route.dart';
 
 class SparepartDetailScreen extends StatefulWidget {
   final SparepartModel sparepart;
@@ -28,9 +31,6 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
   bool _isBookmarked = false;
   bool _isAddingToCart = false;
   double _totalPrice = 0.0;
-
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -102,12 +102,6 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
                   _buildSpecifications(),
                   const SizedBox(height: 24),
                   _buildReviewsSection(),
-                  // const SizedBox(height: 24),
-                  // ElevatedButton.icon(
-                  //   icon: const Icon(Icons.add_comment_outlined),
-                  //   label: const Text('Tambah Ulasan'),
-                  //   onPressed: () => _showAddReviewDialog(context),
-                  // ),
                   const SizedBox(height: 70),
                 ],
               ),
@@ -174,131 +168,188 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
                             color: Colors.black87,
                           ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.star_rounded,
-                            size: 18,
-                            color: Colors.orange,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            summary.averageRating.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                    if (summary.totalReviews > 0)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.star_rounded,
+                              size: 18,
                               color: Colors.orange,
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 4),
+                            Text(
+                              summary.averageRating.toStringAsFixed(1),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    ...List.generate(5, (index) {
-                      return Icon(
-                        Icons.star_rounded,
-                        size: 18,
-                        color: index < summary.averageRating.round()
-                            ? Colors.orange
-                            : Colors.grey[300],
-                      );
-                    }),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${summary.totalReviews} ulasan',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
+                if (summary.totalReviews > 0) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      ...List.generate(5, (index) {
+                        return Icon(
+                          Icons.star_rounded,
+                          size: 18,
+                          color: index < summary.averageRating.round()
+                              ? Colors.orange
+                              : Colors.grey[300],
+                        );
+                      }),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${summary.totalReviews} ulasan',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 20),
                 if (displayReviews.isEmpty)
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(32),
+                      padding: const EdgeInsets.symmetric(vertical: 32),
                       child: Column(
                         children: [
-                          Icon(
-                            Icons.rate_review_outlined,
-                            size: 48,
-                            color: Colors.grey[300],
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade50,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.rate_review_outlined,
+                              size: 48,
+                              color: Colors.grey[400],
+                            ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 16),
                           Text(
                             'Belum ada ulasan',
                             style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Produk ini belum memiliki ulasan.\nJadilah yang pertama!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: () => _handleWriteReview(),
+                            icon: const Icon(Icons.edit_rounded, size: 20),
+                            label: const Text('Tulis Ulasan Pertama'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 14,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 0,
                             ),
                           ),
                         ],
                       ),
                     ),
                   )
-                else
+                else ...[
                   ...displayReviews.map((review) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: ReviewCard(review: review),
                     );
                   }),
-                if (summary.reviews.isNotEmpty) ...[
                   const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReviewsScreen(
-                              sparepartId: widget.sparepart.kodeSparepart,
-                              sparepartName: widget.sparepart.nama,
+                  if (summary.reviews.length >= 3)
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReviewsScreen(
+                                sparepartId: widget.sparepart.kodeSparepart,
+                                sparepartName: widget.sparepart.nama,
+                              ),
                             ),
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          side: BorderSide(color: Colors.blue.shade200),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: BorderSide(color: Colors.blue.shade200),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              summary.reviews.length > 3
+                                  ? 'Lihat ${summary.reviews.length - 3} Ulasan Lainnya'
+                                  : 'Lihat Semua Ulasan (${summary.reviews.length})',
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 18,
+                              color: Colors.blue,
+                            ),
+                          ],
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Lihat Semua Ulasan (${summary.reviews.length})',
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
+                    )
+                  else
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () => _handleWriteReview(),
+                        icon: const Icon(Icons.edit_rounded, size: 18),
+                        label: const Text('Tulis Ulasan'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          side: BorderSide(color: Colors.blue.shade200),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          const SizedBox(width: 4),
-                          const Icon(
-                            Icons.arrow_forward_rounded,
-                            size: 18,
-                            color: Colors.blue,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ],
             ),
@@ -307,6 +358,149 @@ class _SparepartDetailScreenState extends State<SparepartDetailScreen>
 
         return const SizedBox.shrink();
       },
+    );
+  }
+
+  void _showWriteReviewDialog() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => WriteReviewDialog(
+        sparepartId: widget.sparepart.kodeSparepart,
+        sparepartName: widget.sparepart.nama,
+      ),
+    ).then((_) {
+      context.read<ReviewBloc>().add(
+            GetReviewsEvent(sparepartId: widget.sparepart.kodeSparepart),
+          );
+    });
+  }
+
+  void _handleWriteReview() async {
+    final session = locator<Session>();
+    if (session.getToken.isEmpty) {
+      _showLoginRequiredDialog();
+    } else {
+      _showWriteReviewDialog();
+    }
+  }
+
+  void _showLoginRequiredDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icon
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.lock_person_rounded,
+                  size: 48,
+                  color: Colors.blue.shade600,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Title
+              const Text(
+                'Login Diperlukan',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              Text(
+                'Anda harus login terlebih dahulu untuk menulis ulasan produk.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey[600],
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.grey[700],
+                        side: BorderSide(color: Colors.grey.shade300),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Batal',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, RouteService.loginRoute);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
