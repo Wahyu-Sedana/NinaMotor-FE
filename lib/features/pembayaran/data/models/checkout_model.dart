@@ -151,7 +151,7 @@ class CartItem {
     return CartItem(
       sparepartId: json['sparepart_id']?.toString() ?? "",
       nama: json['nama'] ?? "",
-      hargaJual: int.tryParse(json['harga_jual']?.toString() ?? "0") ?? 0,
+      hargaJual: int.tryParse(json['harga']?.toString() ?? "0") ?? 0,
       quantity: int.tryParse(json['quantity']?.toString() ?? "1") ?? 1,
       gambar: json['gambar'],
     );

@@ -268,9 +268,9 @@ class _ServiceMotorTabState extends State<ServiceMotorTab>
       width: 110,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha:  0.3)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -462,7 +462,7 @@ class _ServiceMotorTabState extends State<ServiceMotorTab>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha:  0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

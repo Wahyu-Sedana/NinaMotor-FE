@@ -28,7 +28,6 @@ class SparepartModel {
   final String nama;
   final String? deskripsi;
   int stok;
-  final String hargaBeli;
   final String hargaJual;
   final String merk;
   final String gambarProduk;
@@ -39,7 +38,6 @@ class SparepartModel {
     required this.nama,
     this.deskripsi,
     required this.stok,
-    required this.hargaBeli,
     required this.hargaJual,
     required this.merk,
     required this.gambarProduk,
@@ -52,8 +50,7 @@ class SparepartModel {
       nama: json['nama_sparepart'] ?? '',
       deskripsi: json['deskripsi'],
       stok: json['stok'] ?? 0,
-      hargaBeli: json['harga_beli'] ?? 0,
-      hargaJual: json['harga_jual'] ?? 0,
+      hargaJual: json['harga'] ?? 0,
       merk: json['merk'] ?? '',
       gambarProduk: json['gambar_produk'],
       kategori: json['kategori'] != null
@@ -68,8 +65,7 @@ class SparepartModel {
       'nama_sparepart': nama,
       'deskripsi': deskripsi,
       'stok': stok,
-      'harga_beli': hargaBeli,
-      'harga_jual': hargaJual,
+      'harga': hargaJual,
       'merk': merk,
       'gambar_produk': gambarProduk,
       'kategori': kategori?.toJson(),

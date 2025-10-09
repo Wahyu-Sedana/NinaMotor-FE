@@ -2,7 +2,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/services/app_config.dart';
-import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/cores/utils/strings.dart';
 import 'package:frontend/features/home/data/models/kategori_model.dart';

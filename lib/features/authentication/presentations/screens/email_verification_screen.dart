@@ -1,7 +1,3 @@
-// ============================================
-// FILE: lib/features/authentication/presentations/screens/email_verification_screen.dart
-// ============================================
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/authentication/presentations/bloc/authentication_bloc.dart';
@@ -28,21 +24,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final redColor = Colors.red.shade600;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
-          if (state is ResendVerificationLoading) {}
-
-          // Resend Verification Success
           if (state is ResendVerificationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -53,157 +40,197 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             _startCountdown();
           }
 
-          // Resend Verification Error
           if (state is ResendVerificationError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.failure.message),
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.redAccent,
               ),
             );
           }
         },
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Email Icon
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.email_outlined,
-                    size: 80,
-                    color: Colors.blue.shade600,
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // Title
-                const Text(
-                  'Verifikasi Email Anda',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-
-                // Description
-                Text(
-                  'Kami telah mengirimkan link verifikasi ke',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  widget.email,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blue,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-
-                // Info box
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.amber.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.info_outline, color: Colors.amber.shade700),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Periksa folder spam jika email tidak ditemukan',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.amber.shade900,
-                          ),
-                        ),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // 🔹 Logo Bulat dengan Gradient
+                  Container(
+                    height: 90,
+                    width: 90,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [redColor, Colors.redAccent.shade100],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                    ],
+                    ),
+                    child: const Icon(
+                      Icons.mark_email_read_rounded,
+                      color: Colors.white,
+                      size: 48,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 32),
+                  const SizedBox(height: 32),
 
-                // Resend button
-                BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                  builder: (context, state) {
-                    final isLoading = state is ResendVerificationLoading;
+                  // 🔹 Judul
+                  Text(
+                    "Verifikasi Email Anda",
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade900,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Kami telah mengirimkan tautan verifikasi ke email Anda:",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 15,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.email,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: redColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 36),
 
-                    if (_canResend) {
-                      return TextButton.icon(
-                        onPressed: isLoading ? null : _resendVerification,
-                        icon: isLoading
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
-                              )
-                            : const Icon(Icons.refresh),
-                        label: Text(
-                          isLoading ? 'Mengirim...' : 'Kirim Ulang Email',
+                  // 🔹 Card Info
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 24),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          blurRadius: 10,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 5),
                         ),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // Info Box
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.shade50,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.amber.shade200),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.info_outline,
+                                  color: Colors.amber.shade700),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Periksa folder spam jika email tidak ditemukan.',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.amber.shade900,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    } else {
-                      return Text(
-                        'Kirim ulang dalam $_countdown detik',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
+                        const SizedBox(height: 28),
 
-                // Back to login
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      RouteService.loginRoute,
-                      (route) => false,
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                        // Tombol Kirim Ulang
+                        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                          builder: (context, state) {
+                            final isLoading =
+                                state is ResendVerificationLoading;
+
+                            if (_canResend) {
+                              return SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed:
+                                      isLoading ? null : _resendVerification,
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16.0),
+                                    backgroundColor: redColor,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    elevation: 3,
+                                  ),
+                                  child: isLoading
+                                      ? const SizedBox(
+                                          height: 22,
+                                          width: 22,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.5,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : const Text(
+                                          "Kirim Ulang Email",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                ),
+                              );
+                            } else {
+                              return Text(
+                                'Kirim ulang dalam $_countdown detik',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade600,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                  child: const Text('Kembali ke Login'),
-                ),
-              ],
+
+                  const SizedBox(height: 32),
+
+                  // 🔹 Back to Login
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        RouteService.loginRoute,
+                        (route) => false,
+                      );
+                    },
+                    icon: Icon(Icons.arrow_back_ios_new_rounded,
+                        size: 16, color: redColor),
+                    label: Text(
+                      "Kembali ke Login",
+                      style: TextStyle(
+                        color: redColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -222,7 +249,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       _canResend = false;
       _countdown = 60;
     });
-
     Future.delayed(const Duration(seconds: 1), _updateCountdown);
   }
 

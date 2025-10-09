@@ -20,7 +20,7 @@ class CartItem {
       sparepartId: json['sparepart_id'] ?? "",
       quantity: json['quantity'] ?? 0,
       nama: json['nama_sparepart'] ?? "",
-      hargaJual: json['harga_jual'] ?? "",
+      hargaJual: json['harga'] ?? "",
       gambar: json['gambar'] ?? "",
       subtotal: json['subtotal'] ?? 0,
     );
@@ -31,7 +31,7 @@ class CartItem {
       'sparepart_id': sparepartId,
       'quantity': quantity,
       'nama_sparepart': nama,
-      'harga_jual': hargaJual,
+      'harga': hargaJual,
       'gambar': gambar,
       'subtotal': subtotal,
     };

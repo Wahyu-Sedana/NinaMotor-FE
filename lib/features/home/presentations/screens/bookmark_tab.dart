@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cores/services/app_config.dart';
-import 'package:frontend/cores/utils/colors.dart';
 import 'package:frontend/cores/utils/helper.dart';
 import 'package:frontend/features/home/presentations/bloc/event/produk_event.dart';
 import 'package:frontend/features/home/presentations/bloc/produk_bloc.dart';

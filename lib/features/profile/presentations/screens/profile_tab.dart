@@ -22,17 +22,32 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab>
     with SingleTickerProviderStateMixin {
+  late ProfileBloc _profileBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileBloc = locator<ProfileBloc>()..add(GetProfileEvent());
+  }
+
+  @override
+  void dispose() {
+    _profileBloc.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final session = locator<Session>();
 
-    return BlocProvider(
-      create: (_) => locator<ProfileBloc>()..add(GetProfileEvent()),
+    return BlocProvider.value(
+      value: _profileBloc,
       child: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) =>
             _handleAuthenticationState(context, state, session),
         child: Scaffold(
           backgroundColor: Colors.grey[50],
+          appBar: _buildAppBar(),
           body: SafeArea(
             child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) => _buildProfileContent(state),
@@ -41,6 +56,29 @@ class _ProfileTabState extends State<ProfileTab>
         ),
       ),
     );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black87,
+      title: const Text(
+        'Profile',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      actions: [
+        IconButton(
+          onPressed: _loadBookmarkData,
+          icon: const Icon(Icons.refresh_rounded),
+          tooltip: 'Refresh',
+        ),
+      ],
+    );
+  }
+
+  void _loadBookmarkData() {
+    _profileBloc.add(GetProfileEvent());
   }
 
   void _handleAuthenticationState(
@@ -117,7 +155,7 @@ class _ProfileTabState extends State<ProfileTab>
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () => context.read<ProfileBloc>().add(GetProfileEvent()),
+            onPressed: () => _profileBloc.add(GetProfileEvent()),
             icon: const Icon(Icons.refresh_rounded),
             label: const Text('Coba Lagi'),
             style: ElevatedButton.styleFrom(
@@ -307,7 +345,7 @@ class _ProfileTabState extends State<ProfileTab>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
+                color: iconColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: iconColor, size: 24),
@@ -400,32 +438,13 @@ class _ProfileTabState extends State<ProfileTab>
       MaterialPageRoute(builder: (_) => ProfileEditScreen()),
     );
 
-    // Refresh profile if edited
     if (result == true) {
-      context.read<ProfileBloc>().add(GetProfileEvent());
+      _profileBloc.add(GetProfileEvent());
     }
   }
 
   void _navigateToTransactionHistory() {
     Navigator.pushNamed(context, RouteService.historyPembyaranRoute);
-  }
-
-  void _navigateToServiceHistory() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Fitur history servis akan segera tersedia'),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  void _navigateToSettings() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Fitur pengaturan akan segera tersedia'),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
   }
 
   void _showLogoutConfirmation() {
