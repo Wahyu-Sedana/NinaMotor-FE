@@ -7,7 +7,7 @@ import 'package:frontend/features/profile/data/models/profile_model.dart';
 abstract class ProfileDatasource {
   Future<ProfileResponse> getProfile();
   Future<ProfileResponse> updateProfile(
-      String nama, String alamat, String noTelp, String imageProfile);
+      String nama, String noTelp, String imageProfile);
 }
 
 class ProfileDatasourceImpl implements ProfileDatasource {
@@ -34,13 +34,12 @@ class ProfileDatasourceImpl implements ProfileDatasource {
 
   @override
   Future<ProfileResponse> updateProfile(
-      String nama, String alamat, String noTelp, String imageProfile) async {
+      String nama, String noTelp, String imageProfile) async {
     final path = '${AppConfig.baseURL}profile/update';
     final session = locator<Session>();
     try {
       final formData = FormData.fromMap({
         "nama": nama,
-        "alamat": alamat,
         "no_telp": noTelp,
         if (imageProfile.isNotEmpty)
           "profile": await MultipartFile.fromFile(

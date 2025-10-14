@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Cart',
                 ),
                 _buildTabItem(
-                  icon: Icons.bookmark_rounded,
+                  icon: Icons.favorite,
                   index: 2,
                   label: 'Bookmark',
                 ),

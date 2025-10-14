@@ -10,8 +10,8 @@ abstract class AuthenticationDatasource {
   Future<AuthenticationModel> userLogin(
       String email, String password, String fcmToken, String phoneId);
   Future<AuthenticationModelLogout> userLogout();
-  Future<AuthenticationModel> userRegister(
-      String name, String email, String password, String cPassword);
+  Future<AuthenticationModel> userRegister(String name, String email,
+      String password, String cPassword, String noTelp);
   Future<AuthenticationModel> checkUserEmaill(String email);
   // Future<AuthenticationModel> resetPassword(String email, String newPassword);
   Future<String> resendVerification(String email);
@@ -69,15 +69,16 @@ class AuthenticationDataSourceImpl implements AuthenticationDatasource {
   }
 
   @override
-  Future<AuthenticationModel> userRegister(
-      String name, String email, String password, String cPassword) async {
+  Future<AuthenticationModel> userRegister(String name, String email,
+      String noTelp, String password, String cPassword) async {
     final String url = '${AppConfig.baseURL}register';
     try {
       final response = await dio.post(url, data: {
         'nama': name,
         'email': email,
         'password': password,
-        'password_confirmation': cPassword
+        'password_confirmation': cPassword,
+        'no_telp': noTelp,
       });
 
       return AuthenticationModel.fromJson(response.data);

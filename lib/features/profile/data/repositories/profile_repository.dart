@@ -6,7 +6,7 @@ import 'package:frontend/features/profile/data/models/profile_model.dart';
 abstract class ProfileRepository {
   Future<Either<Failure, ProfileResponse>> getProfile();
   Future<Either<Failure, ProfileResponse>> updateProfile(
-      String nama, String alamat, String noTelp, String imageProfile);
+      String nama, String noTelp, String imageProfile);
 }
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -25,10 +25,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, ProfileResponse>> updateProfile(
-      String nama, String alamat, String noTelp, String imageProfile) async {
+      String nama, String noTelp, String imageProfile) async {
     try {
       final getProfile =
-          await datasource.updateProfile(nama, alamat, noTelp, imageProfile);
+          await datasource.updateProfile(nama, noTelp, imageProfile);
       return Right(getProfile);
     } on Exception catch (e) {
       return Left(ServerFailure(message: e.toString()));

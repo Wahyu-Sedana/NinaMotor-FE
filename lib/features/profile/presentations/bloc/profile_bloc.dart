@@ -33,7 +33,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(ProfileLoading());
 
     final result = await profileUsecaseImpl.callUpdateProfile(
-        event.nama, event.alamat, event.noTelp, event.imageProfile ?? "");
+        event.nama, event.noTelp, event.imageProfile ?? "");
 
     result.fold(
       (error) => emit(ProfileError(failure: error)),

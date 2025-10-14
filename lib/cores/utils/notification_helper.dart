@@ -57,15 +57,15 @@ class NotificationHelper {
     final fcmToken = await FirebaseMessaging.instance.getToken();
     print('FCM Token: $fcmToken');
 
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   print("Pesan diterima (foreground): ${message.data}");
-    //   showNotifications(message);
-    // });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("Pesan diterima (foreground): ${message.data}");
+      showNotifications(message);
+    });
 
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   print("User klik notifikasi: ${message.data}");
-    //   showNotifications(message);
-    // });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("User klik notifikasi: ${message.data}");
+      showNotifications(message);
+    });
   }
 
   final AndroidNotificationDetails _androidNotificationDetails =

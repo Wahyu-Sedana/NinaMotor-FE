@@ -22,7 +22,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
   final _formKey = GlobalKey<FormState>();
   final _namaController = TextEditingController();
   final _emailController = TextEditingController();
-  final _alamatController = TextEditingController();
   final _noTelpController = TextEditingController();
 
   File? _imageFile;
@@ -40,21 +39,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
   void dispose() {
     _namaController.dispose();
     _emailController.dispose();
-    _alamatController.dispose();
     _noTelpController.dispose();
     super.dispose();
   }
 
   void _setupTextControllerListeners() {
     _namaController.addListener(_checkForChanges);
-    _alamatController.addListener(_checkForChanges);
     _noTelpController.addListener(_checkForChanges);
   }
 
   void _checkForChanges() {
     if (_currentProfile != null) {
       final hasTextChanges = _namaController.text != _currentProfile!.nama ||
-          _alamatController.text != (_currentProfile!.alamat ?? '') ||
           _noTelpController.text != (_currentProfile!.noTelp ?? '');
 
       final hasImageChanges = _imageFile != null;
@@ -172,7 +168,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
       context.read<ProfileBloc>().add(
             UpdateProfileEvent(
               nama: _namaController.text.trim(),
-              alamat: _alamatController.text.trim(),
               noTelp: _noTelpController.text.trim(),
               imageProfile: _imageFile?.path,
             ),
@@ -529,19 +524,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
           ),
           const SizedBox(height: 16),
           _buildFormField(
-            controller: _alamatController,
-            label: 'Alamat',
-            icon: Icons.location_on_rounded,
-            maxLines: 2,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Alamat tidak boleh kosong';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-          _buildFormField(
             controller: _noTelpController,
             label: 'Nomor Telepon',
             icon: Icons.phone_rounded,
@@ -649,7 +631,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
     _currentProfile = profile;
     _namaController.text = profile.nama;
     _emailController.text = profile.email;
-    _alamatController.text = profile.alamat ?? '';
     _noTelpController.text = profile.noTelp ?? '';
     setState(() {});
   }

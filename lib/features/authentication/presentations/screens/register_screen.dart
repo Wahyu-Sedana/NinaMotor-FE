@@ -19,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final nameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   // final alamatController = TextEditingController();
-  // final noTelpController = TextEditingController();
+  final noTelpController = TextEditingController();
 
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
@@ -30,11 +30,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final confirmPassword = confirmPasswordController.text.trim();
     final name = nameController.text.trim();
     // final alamat = alamatController.text.trim();
-    // final noTelp = noTelpController.text.trim();
+    final noTelp = noTelpController.text.trim();
 
     if (email.isEmpty ||
         password.isEmpty ||
         confirmPassword.isEmpty ||
+        noTelp.isEmpty ||
         name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Semua field wajib diisi')),
@@ -50,10 +51,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     context.read<AuthenticationBloc>().add(RegisterEvent(
+          name: name,
           email: email,
           password: password,
           cPassword: confirmPassword,
-          name: name,
+          noTelp: noTelp,
         ));
   }
 
@@ -155,6 +157,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           hint: "Alamat Email",
                           icon: Icons.email_outlined,
                           type: TextInputType.emailAddress,
+                        ),
+                        const SizedBox(height: 16),
+
+                        _buildInput(
+                          controller: noTelpController,
+                          hint: "No Telpon",
+                          icon: Icons.call,
+                          type: TextInputType.number,
                         ),
                         const SizedBox(height: 16),
 
@@ -322,13 +332,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             },
             child: const Text('Verifikasi Email'),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, RouteService.loginRoute);
-            },
-            child: const Text('Login Sekarang'),
-          ),
         ],
       ),
     );
@@ -341,7 +344,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     nameController.dispose();
     confirmPasswordController.dispose();
     // alamatController.dispose();
-    // noTelpController.dispose();
+    noTelpController.dispose();
     super.dispose();
   }
 }

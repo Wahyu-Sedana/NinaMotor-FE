@@ -10,19 +10,17 @@ class GetProfileEvent extends ProfileEvent {}
 
 class UpdateProfileEvent extends ProfileEvent {
   final String nama;
-  final String alamat;
   final String noTelp;
   final String? imageProfile;
 
   UpdateProfileEvent({
     required this.nama,
-    required this.alamat,
     required this.noTelp,
     required this.imageProfile,
   });
 
   @override
-  List<Object> get props => [nama, alamat, noTelp];
+  List<Object> get props => [nama, noTelp];
 }
 
 class UploadProfilePhotoEvent extends ProfileEvent {
